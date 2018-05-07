@@ -1,36 +1,46 @@
-package com.example.marius.helpmesee.mainscreen.presenters;
+package com.example.marius.helpmesee.mainscreen;
 
-import android.support.v7.app.AppCompatActivity;
+/**
+ * Created by Marius Olariu <mariuslucian.olariu@gmail.com>
+ */
+
+import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import com.example.marius.helpmesee.common.AppFeaturesEnum;
-import com.example.marius.helpmesee.mainscreen.views.MainMenuScreenView;
-import com.example.marius.helpmesee.mainscreen.views.MainMenuScreenView.MainMenuScreenListener;
-import com.example.marius.helpmesee.mainscreen.views.MainMenuScreenViewImpl;
+import com.example.marius.helpmesee.common.AppState;
+import com.example.marius.helpmesee.directions.DirectionsScreenPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainScreenPresenter extends AppCompatActivity implements
-    MainMenuScreenListener {
+public class MainScreenPresenter extends MainMenuScreenListener {
 
   // //the model goes here if any
   private MainMenuScreenView rootView; // ui element of this presenter
   private List<String> appFeaturesList;
   private static final String MAIN_SCREEN_TAG = "MainScreen";
 
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    rootView = new MainMenuScreenViewImpl(this, null);
+    AppState.getInstance().setCurrentContext(this);
+    detectPhoneSize();
 
+    rootView = new MainMenuScreenViewImpl(this, null);
     setContentView(rootView.getRootView());
 
     addAppFeatures();
 
     rootView.setListener(this);
     rootView.displayAppFeatures(appFeaturesList);
+
   }
+
 
   private void addAppFeatures() {
     appFeaturesList = new ArrayList<>();
@@ -48,12 +58,16 @@ public class MainScreenPresenter extends AppCompatActivity implements
 
     //TODO : launch the selected feature
     switch (selectedFeature) {
-      case LOCATION:
-        Log.i(MAIN_SCREEN_TAG, "Launch Location screen");
-        break;
-
       case DIRECTIONS:
         Log.i(MAIN_SCREEN_TAG, "Launch DIRECTIONS screen");
+
+        Intent i = new Intent(MainScreenPresenter.this, DirectionsScreenPresenter.class);
+        startActivity(i);
+        this.finish();
+        break;
+
+      case LOCATION:
+        Log.i(MAIN_SCREEN_TAG, "Launch Location screen");
         break;
 
       case SCENE_DESCRIPTION:
@@ -61,11 +75,27 @@ public class MainScreenPresenter extends AppCompatActivity implements
         break;
 
       case TEXT_RECOGNITION:
-        Log.i(MAIN_SCREEN_TAG, "Launch TEXT_RECOGNITION screen");
+        Log.i(MAIN_SCREEN_TAG, "Launch sEXT_RECOGNITION screen");
         break;
-      
+
       default:
         Log.e(MAIN_SCREEN_TAG, "Feature doesn't exist!");
     }
+  }
+
+  private void detectPhoneSize() {
+    Display display = getWindowManager().getDefaultDisplay();
+    Point size = new Point();
+    DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+
+    display.getSize(size);
+
+    int width_pixel = size.x;
+    int height_pixel = size.y;
+
+    AppState.getInstance().setPhone_height_dp((int) (height_pixel / displayMetrics.density));
+    AppState.getInstance().setPhone_width_dp(((int) (width_pixel / displayMetrics.density)));
+
+
   }
 }

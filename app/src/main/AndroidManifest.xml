@@ -9,13 +9,31 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
-    <activity android:name=".mainscreen.presenters.MainScreenPresenter">
+    <activity android:name=".mainscreen.MainScreenPresenter">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+
+    <activity android:name=".directions.DirectionsScreenPresenter">
+
+    </activity>
+
+    <activity android:name=".location.LocationScreenPresenter">
+
+    </activity>
+
+    <activity android:name=".scene_description.SceneDescPresenter">
+
+    </activity>
+
+    <activity android:name=".text_recognition.TextRecPresenter">
+
+    </activity>
+
+
   </application>
 
 </manifest>

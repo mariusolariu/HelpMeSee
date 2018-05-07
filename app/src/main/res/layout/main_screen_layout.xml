@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".mainscreen.presenters.MainScreenPresenter">
+  android:weightSum="10"
+  tools:context=".mainscreen.MainScreenPresenter">
 
   <ListView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="8dp"
-    android:id="@+id/featuresList"/>
+    android:id="@+id/featuresList">
+  </ListView>
 
-</LinearLayout>
+  <Button
+    android:id="@+id/speechButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/speechB_text"
+    android:textAllCaps="false"
+    android:layout_margin="15dp"
+    android:layout_gravity="bottom|right"
+    android:drawableLeft="@drawable/mic"
+    />
+
+
+  <!--
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/fab"
+    android:layout_width="wrap_content"
+    android:layout_height="47dp"
+    android:layout_margin="15dp"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentBottom="true"
+    android:src="@drawable/mic"/>
+    -->
+
+</FrameLayout>

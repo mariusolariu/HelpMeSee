@@ -1,11 +1,10 @@
 package com.example.marius.helpmesee.common;
 
 /**
- * Created by Marius
+ * Created by Marius Olariu <mariuslucian.olariu@gmail.com>
  */
-
 public enum AppFeaturesEnum {
-  LOCATION("LOCATION"), DIRECTIONS("DIRECTIONS"), TEXT_RECOGNITION("TEXT_RECOGNITION"), SCENE_DESCRIPTION("SCENE_DESCRIPTION");
+  DIRECTIONS("directions"), LOCATION("location"),  TEXT_RECOGNITION("text recognition"), SCENE_DESCRIPTION("scene description");
 
   private String featureName;
 
@@ -16,5 +15,17 @@ public enum AppFeaturesEnum {
   @Override
   public String toString() {
     return featureName;
+  }
+
+  public static AppFeaturesEnum stringToFeature (String text){
+    AppFeaturesEnum feature = null;
+
+    for (AppFeaturesEnum f: AppFeaturesEnum.values()) {
+        if (text.equals(f.toString())){
+          feature = f;
+        }
+    }
+
+    return feature;
   }
 }

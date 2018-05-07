@@ -1,7 +1,7 @@
 package com.example.marius.helpmesee.common;
 
 /**
- * Created by Marius
+ * Created by Marius Olariu <mariuslucian.olariu@gmail.com>
  */
 
 import android.os.Bundle;

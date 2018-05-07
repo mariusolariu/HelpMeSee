@@ -1,3 +1,4 @@
 <resources>
   <string name="app_name">HelpMeSee</string>
+  <string name="speechB_text">Speech Button</string>
 </resources>
