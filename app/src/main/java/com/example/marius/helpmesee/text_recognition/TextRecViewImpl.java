@@ -20,7 +20,7 @@ public class TextRecViewImpl implements TextRecView {
   }
 
   @Override
-  public View getRootView() {
+  public View getAndroidLayoutView() {
     return rootView;
   }
 

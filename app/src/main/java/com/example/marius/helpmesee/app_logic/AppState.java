@@ -1,6 +1,7 @@
-package com.example.marius.helpmesee.common;
+package com.example.marius.helpmesee.app_logic;
 
-import android.content.Context;
+
+import android.widget.RelativeLayout.LayoutParams;
 
 /**
  * Created by Marius Olariu <mariuslucian.olariu@gmail.com>
@@ -9,10 +10,14 @@ public class AppState {
 
   private static final AppState ourInstance = new AppState();
   //should be set by the foreground activity
-  private Context currentContext;
+  // private Context currentContext;
 
   private int phone_width_dp;
   private int phone_height_dp;
+
+  private boolean appFistTimeLaunched = true;
+
+  private LayoutParams speechButtonLayoutParams;
 
 
   public static AppState getInstance() {
@@ -20,14 +25,6 @@ public class AppState {
   }
 
   private AppState() {
-  }
-
-  public Context getCurrentContext() {
-    return currentContext;
-  }
-
-  public void setCurrentContext(Context currentContext) {
-    this.currentContext = currentContext;
   }
 
   public int getPhone_width_dp() {
@@ -45,4 +42,21 @@ public class AppState {
   public void setPhone_height_dp(int phone_height_dp) {
     this.phone_height_dp = phone_height_dp;
   }
+
+  public boolean isAppFistTimeLaunched() {
+    return appFistTimeLaunched;
+  }
+
+  public void setAppFistTimeLaunched(boolean appFistTimeLaunched) {
+    this.appFistTimeLaunched = appFistTimeLaunched;
+  }
+
+  public LayoutParams getSpeechButtonLayoutParams() {
+    return speechButtonLayoutParams;
+  }
+
+  public void setSpeechButtonLayoutParams(LayoutParams speechButtonLayoutParams) {
+    this.speechButtonLayoutParams = speechButtonLayoutParams;
+  }
+
 }

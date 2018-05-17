@@ -20,7 +20,7 @@ public class LocationScreenViewImpl implements  LocationScreenView{
   }
 
   @Override
-  public View getRootView() {
+  public View getAndroidLayoutView() {
     return rootView;
   }
 

@@ -13,7 +13,7 @@ public class TextRecPresenter extends TextRecListener {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-
     rootView = new TextRecViewImpl(this, null);
+    setContentView(rootView.getAndroidLayoutView());
   }
 }

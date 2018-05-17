@@ -1,6 +1,6 @@
 package com.example.marius.helpmesee.mainscreen;
 
-import com.example.marius.helpmesee.common.MvpView;
+import com.example.marius.helpmesee.app_logic.MvpView;
 import java.util.List;
 
 /**
@@ -11,5 +11,9 @@ public interface MainMenuScreenView extends MvpView {
 
   void displayAppFeatures(List<String> features);
 
-  void setListener(MainMenuScreenListener listener);
+  void setScreenListener(MainMenuScreenListener listener);
+
+  void askTurnGpsOn();
+
+  void askTurnInternetOn();
 }

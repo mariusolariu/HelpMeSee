@@ -1,4 +1,9 @@
 <resources>
   <string name="app_name">HelpMeSee</string>
-  <string name="speechB_text">Speech Button</string>
+  <string name="speechB_text">Talk</string>
+  <string name="hintEnd">Chose destination</string>
+  <string name="gps_off_title">Gps is off</string>
+  <string name="gps_off_message">Please turn Gps on in order to use this app.</string>
+  <string name="network_off_title">Internet can\'t be reached</string>
+  <string name="OK">Ok</string>
 </resources>

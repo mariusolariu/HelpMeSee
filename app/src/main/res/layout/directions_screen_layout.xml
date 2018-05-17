@@ -4,7 +4,102 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".directions.DirectionsScreenPresenter">
+  tools:context=".directions.presenter.DirectionsScreenPresenter">
 
+
+  <LinearLayout
+    android:id="@+id/infoLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <EditText
+      android:id="@+id/destACTV"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/hintEnd"
+      android:singleLine="true"
+      />
+
+    <!-- focusable = true instructs TalkBack to read the whole content once-->
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:focusable="true"
+      android:orientation="horizontal">
+
+      <ImageView
+        android:id="@+id/distanceIV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="Distance"
+        android:src="@drawable/distance_ico"/>
+
+      <TextView
+        android:id="@+id/distanceTV"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:hint="0 km"/>
+
+      <ImageView
+        android:id="@+id/durationIV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="Duration"
+        android:src="@drawable/time_ico"/>
+
+      <TextView
+        android:id="@+id/durationTV"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:hint="0 min"/>
+    </LinearLayout>
+
+  </LinearLayout>
+
+  <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/speechButton_directions"
+    android:layout_below="@+id/infoLayout"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    tools:context="mm.spp.root.MapsActivity"/>
+
+
+  <!-- The gravity and button size are set programatically -->
+  <Button
+    android:id="@+id/speechButton_directions"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:drawableLeft="@drawable/mic"
+    android:drawableStart="@drawable/mic"
+    android:text="@string/speechB_text"
+    android:textAllCaps="false"/>
+
+  <Button
+    android:id="@+id/findPathB"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:drawableLeft="@drawable/directions_ico"
+    android:drawableStart="@drawable/directions_ico"
+    android:text="Find path"
+    android:textAllCaps="false"/>
 
 </RelativeLayout>

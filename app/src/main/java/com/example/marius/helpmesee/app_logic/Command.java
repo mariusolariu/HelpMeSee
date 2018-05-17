@@ -1,10 +1,12 @@
-package com.example.marius.helpmesee.common;
+package com.example.marius.helpmesee.app_logic;
 
 import android.content.Context;
 
 /**
  * Created by Marius Olariu <mariuslucian.olariu@gmail.com>
  */
+
+//TODO implement command design pattern
 public class Command {
 
   private String id;

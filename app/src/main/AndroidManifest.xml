@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.example.marius.helpmesee">
 
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> -->
+
+
   <application
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
@@ -9,30 +14,40 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
-    <activity android:name=".mainscreen.MainScreenPresenter">
+    <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="@string/google_maps_key"/>
+
+    <activity
+      android:label="@string/app_name"
+      android:name=".mainscreen.MainMenuScreenPresenter">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
-    </activity>
-
-    <activity android:name=".directions.DirectionsScreenPresenter">
 
     </activity>
 
-    <activity android:name=".location.LocationScreenPresenter">
-
+    <activity
+      android:label="Directions Screen"
+      android:name=".directions.presenter.DirectionsScreenPresenter">
     </activity>
 
-    <activity android:name=".scene_description.SceneDescPresenter">
-
+    <activity
+      android:label="Location Screen"
+      android:name=".location.LocationScreenPresenter">
     </activity>
 
-    <activity android:name=".text_recognition.TextRecPresenter">
-
+    <activity
+      android:label="Scene Description"
+      android:name=".scene_description.SceneDescPresenter">
     </activity>
 
+    <activity
+      android:label="Text Recognition"
+      android:name=".text_recognition.TextRecPresenter">
+    </activity>
 
   </application>
 

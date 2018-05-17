@@ -15,6 +15,7 @@ public class LocationScreenPresenter extends LocationScreenListener {
 
     //null is passed beacause the layout is the parent of all views, i.e. container=none
     rootView = new LocationScreenViewImpl(this, null);
+    setContentView(rootView.getAndroidLayoutView());
 
   }
 

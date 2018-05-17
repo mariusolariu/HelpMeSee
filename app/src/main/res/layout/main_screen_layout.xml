@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:weightSum="10"
-  tools:context=".mainscreen.MainScreenPresenter">
+  tools:context=".mainscreen.MainMenuScreenPresenter">
 
   <ListView
     android:layout_width="match_parent"
@@ -16,16 +16,16 @@
     android:id="@+id/featuresList">
   </ListView>
 
+    <!-- The gravity and button size are set programatically -->
   <Button
-    android:id="@+id/speechButton"
+    android:id="@+id/speechButton_main"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="@string/speechB_text"
-    android:textAllCaps="false"
     android:layout_margin="15dp"
-    android:layout_gravity="bottom|right"
+    android:drawableStart="@drawable/mic"
     android:drawableLeft="@drawable/mic"
-    />
+    android:text="@string/speechB_text"
+    android:textAllCaps="false"/>
 
 
   <!--
@@ -39,4 +39,4 @@
     android:src="@drawable/mic"/>
     -->
 
-</FrameLayout>
+</RelativeLayout>

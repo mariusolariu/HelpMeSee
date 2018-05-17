@@ -1,9 +1,7 @@
-package com.example.marius.helpmesee.common;
+package com.example.marius.helpmesee.app_logic;
 
-import android.content.Context;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import java.util.Locale;
 
@@ -14,6 +12,13 @@ public class Constants {
   public static final String HMS_INFO = "HmsInfo"; //tag used for logging info
   public static final int SPEECH_INPUT_CODE = 1;
   public static final Intent SPEECH_INTENT;
+
+  //string constants
+  public static final String ORIGIN = "origin";
+  public static final String DESTINATION = "destination";
+  public static final String MODE = "mode";
+  public static final String WALKING = "walking";
+
 
   /**
    *   This block gets executed when the class is loaded in the memory.
@@ -29,18 +34,19 @@ public class Constants {
   }
 
 
-  public static final float PHONE_WIDTH_DP;
-  public static final float PHONE_HEIGHT_DP;
+//  public static final float PHONE_WIDTH_DP;
+//  public static final float PHONE_HEIGHT_DP;
+//
+//  static {
+//    Context currentContext = AppState.getInstance().getCurrentContext();
+//    DisplayMetrics displayMetrics = currentContext.getResources().getDisplayMetrics();
+//
+//
+//    //FIXME: these values are not the correct ones
+//    PHONE_WIDTH_DP  = displayMetrics.widthPixels / displayMetrics.density;
+//    PHONE_HEIGHT_DP  = displayMetrics.heightPixels / displayMetrics.density;
+//  }
 
-  static {
-    Context currentContext = AppState.getInstance().getCurrentContext();
-    DisplayMetrics displayMetrics = currentContext.getResources().getDisplayMetrics();
-
-
-    //FIXME: these values are not the correct ones
-    PHONE_WIDTH_DP  = displayMetrics.widthPixels / displayMetrics.density;
-    PHONE_HEIGHT_DP  = displayMetrics.heightPixels / displayMetrics.density;
-  }
 
 
 }

@@ -1,4 +1,4 @@
-package com.example.marius.helpmesee.common;
+package com.example.marius.helpmesee.app_logic;
 
 /**
  * Created by Marius Olariu <mariuslucian.olariu@gmail.com>

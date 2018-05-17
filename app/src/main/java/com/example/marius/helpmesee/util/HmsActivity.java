@@ -1,9 +1,11 @@
-package com.example.marius.helpmesee.common;
+package com.example.marius.helpmesee.util;
 
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import com.example.marius.helpmesee.app_logic.CommandProcessor;
+import com.example.marius.helpmesee.app_logic.Constants;
 import java.util.ArrayList;
 
 /**
@@ -36,17 +38,11 @@ public abstract class HmsActivity extends AppCompatActivity {
           String detectedText = text.get(0);
           Log.i(Constants.HMS_INFO, "Detected text:" + detectedText);
 
-          CommandProcessor.getInstance().processCommand(detectedText);
+          CommandProcessor.getInstance().processCommand(detectedText, this);
         }
 
         break;
     }
   }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-
-    AppState.getInstance().setCurrentContext(this);
-  }
 }

@@ -20,7 +20,7 @@ public class SceneDescViewImpl implements SceneDescView {
   }
 
   @Override
-  public View getRootView() {
+  public View getAndroidLayoutView() {
     return rootView;
   }
 
