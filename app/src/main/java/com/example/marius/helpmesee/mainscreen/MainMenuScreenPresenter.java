@@ -150,8 +150,8 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
   private void setSpeechButtonLayoutParams() {
     int phone_height_dp = AppState.getInstance().getPhone_height_dp();
     int phone_width_dp = AppState.getInstance().getPhone_width_dp();
-    int spButtonWidth = (int) (phone_width_dp / 1.2);
-    int spButtonHeight = phone_height_dp / 4;
+    int spButtonWidth = (int) (phone_width_dp );
+    int spButtonHeight = phone_height_dp / 3;
 
     //programmaticaly configured the position of button since it will be a children
     //in a RelativeLayout and I want it to be in the same place in each screen

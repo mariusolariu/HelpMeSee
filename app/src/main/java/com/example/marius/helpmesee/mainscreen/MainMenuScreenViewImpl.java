@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import com.example.marius.helpmesee.R;
 import com.example.marius.helpmesee.app_logic.AppState;
+import com.example.marius.helpmesee.mainscreen.util.HmsArrayAdapter;
+import com.example.marius.helpmesee.util.HmsActivity;
 import java.util.List;
 
 /**
@@ -197,9 +199,11 @@ public class MainMenuScreenViewImpl implements MainMenuScreenView {
 
   @Override
   public void displayAppFeatures(List<String> features) {
-    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context,
-        android.R.layout.simple_list_item_1);
-    arrayAdapter.addAll(features);
+//    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context,
+//        android.R.layout.simple_list_item_1);
+    //arrayAdapter.addAll(features);
+
+    HmsArrayAdapter arrayAdapter = new HmsArrayAdapter(context,R.layout.row_layout, features);
 
     featuresListView.setAdapter(arrayAdapter);
   }

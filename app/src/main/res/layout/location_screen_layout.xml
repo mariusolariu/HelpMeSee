@@ -4,6 +4,36 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:background="@color/common_google_signin_btn_text_light_pressed"
   tools:context=".directions.presenter.DirectionsScreenPresenter">
+
+  <Button
+    android:id="@+id/helpBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:contentDescription="Send message asking for help to friends!"
+    android:text="Help"/>
+
+  <TextView
+    android:id="@+id/locationTV"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="TextView"/>
+
+  <Button
+    android:id="@+id/speechBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:drawableStart="@drawable/mic"
+    android:drawableLeft="@drawable/mic"
+    android:text="@string/speechB_text"
+    />
+
+  <Button
+    android:id="@+id/addFriendBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/add_friend"
+    android:textAllCaps="false"/>
 
 </RelativeLayout>

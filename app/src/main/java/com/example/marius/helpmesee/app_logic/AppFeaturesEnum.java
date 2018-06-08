@@ -4,7 +4,7 @@ package com.example.marius.helpmesee.app_logic;
  * Created by Marius Olariu <mariuslucian.olariu@gmail.com>
  */
 public enum AppFeaturesEnum {
-  DIRECTIONS("directions"), LOCATION("location"),  TEXT_RECOGNITION("text recognition"), SCENE_DESCRIPTION("scene description");
+  DIRECTIONS("Directions"), LOCATION("Location"),  TEXT_RECOGNITION("Text Recognition"), SCENE_DESCRIPTION("Scene Description");
 
   private String featureName;
 
@@ -20,8 +20,9 @@ public enum AppFeaturesEnum {
   public static AppFeaturesEnum stringToFeature (String text){
     AppFeaturesEnum feature = null;
 
+    text = text.toUpperCase();
     for (AppFeaturesEnum f: AppFeaturesEnum.values()) {
-        if (text.equals(f.toString())){
+        if (text.equals(f.toString().toUpperCase())){
           feature = f;
         }
     }

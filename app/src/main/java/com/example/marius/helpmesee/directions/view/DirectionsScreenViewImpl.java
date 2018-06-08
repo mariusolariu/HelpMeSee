@@ -69,6 +69,27 @@ public class DirectionsScreenViewImpl implements DirectionsScreenView {
     });
   }
 
+  private void setButtonsSize() {
+    LayoutParams params = AppState.getInstance().getSpeechButtonLayoutParams();
+    speechInputButton.setLayoutParams(params);
+
+    //TODO: should be done only once when app is first run
+    int phone_height_dp = AppState.getInstance().getPhone_height_dp();
+    int phone_width_dp = AppState.getInstance().getPhone_width_dp();
+    int spButtonWidth = phone_width_dp;
+    int spButtonHeight = phone_height_dp / 3;
+
+    LayoutParams layoutParamsFP = new LayoutParams(spButtonWidth, spButtonHeight);
+    layoutParamsFP.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+    layoutParamsFP.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+    layoutParamsFP.bottomMargin = phone_height_dp / 20;
+    layoutParamsFP.rightMargin = phone_height_dp / 20;
+    layoutParamsFP.leftMargin = phone_height_dp / 20;
+    layoutParamsFP.topMargin = phone_height_dp / 20;
+
+    findPathButton.setLayoutParams(layoutParamsFP);
+  }
+
   private void addListenersToButtons() {
     findPathButton.setOnClickListener(new OnClickListener() {
       @Override
@@ -88,28 +109,6 @@ public class DirectionsScreenViewImpl implements DirectionsScreenView {
     });
 
   }
-
-  private void setButtonsSize() {
-    LayoutParams params = AppState.getInstance().getSpeechButtonLayoutParams();
-    speechInputButton.setLayoutParams(params);
-
-    //TODO: should be done only once when app is first run
-    int phone_height_dp = AppState.getInstance().getPhone_height_dp();
-    int phone_width_dp = AppState.getInstance().getPhone_width_dp();
-    int spButtonWidth = (int) (phone_width_dp / 1.2);
-    int spButtonHeight = phone_height_dp / 4;
-
-    LayoutParams layoutParamsFP = new LayoutParams(spButtonWidth, spButtonHeight);
-    layoutParamsFP.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-    layoutParamsFP.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-    layoutParamsFP.bottomMargin = phone_height_dp / 20;
-    layoutParamsFP.rightMargin = phone_height_dp / 20;
-    layoutParamsFP.leftMargin = phone_height_dp / 20;
-    layoutParamsFP.topMargin = phone_height_dp / 20;
-
-    findPathButton.setLayoutParams(layoutParamsFP);
-  }
-
 
   @Override
   public View getAndroidLayoutView() {
@@ -149,6 +148,7 @@ public class DirectionsScreenViewImpl implements DirectionsScreenView {
     String duration = inState.getString(Constants.DURATION_TIME);
     durationTV.setText(duration);
   }
+
   private boolean isDesinationSet() {
     boolean valid = true;
 
