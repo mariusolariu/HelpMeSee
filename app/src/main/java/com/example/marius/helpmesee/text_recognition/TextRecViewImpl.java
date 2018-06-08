@@ -28,4 +28,15 @@ public class TextRecViewImpl implements TextRecView {
   public Bundle getViewState() {
     return null;
   }
+
+  @Override
+  public void onSaveViewState(Bundle outState) {
+
+  }
+
+  @Override
+  public void onRestoreInstanceState(Bundle inState) {
+
+  }
+
 }

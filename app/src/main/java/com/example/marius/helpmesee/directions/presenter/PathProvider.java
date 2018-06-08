@@ -25,9 +25,9 @@ public class PathProvider {
     parameters = new HashMap<>();
 
     //
-    parameters.put(Constants.ORIGIN,"");
-    parameters.put(Constants.DESTINATION,"");
-    parameters.put(Constants.MODE,Constants.WALKING);
+    parameters.put(Constants.PATH_ORIGIN,"");
+    parameters.put(Constants.PATH_DESTINATION,"");
+    parameters.put(Constants.PATH_MODE,Constants.PATH_WALKING);
   }
 
   public void start(){
@@ -77,11 +77,11 @@ public class PathProvider {
    * @param origin - current location of user, i.e. (latitude,longitude)
    */
   public void setOrigin(String origin){
-    parameters.put(Constants.ORIGIN, origin);
+    parameters.put(Constants.PATH_ORIGIN, origin);
   }
 
   public void setDestination(String destination){
-    parameters.put(Constants.DESTINATION, destination);
+    parameters.put(Constants.PATH_DESTINATION, destination);
   }
 
   /**

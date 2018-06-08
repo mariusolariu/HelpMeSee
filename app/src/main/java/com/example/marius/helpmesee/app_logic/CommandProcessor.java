@@ -2,11 +2,11 @@ package com.example.marius.helpmesee.app_logic;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import com.example.marius.helpmesee.directions.presenter.DirectionsScreenPresenter;
 import com.example.marius.helpmesee.location.LocationScreenPresenter;
 import com.example.marius.helpmesee.scene_description.SceneDescPresenter;
 import com.example.marius.helpmesee.text_recognition.TextRecPresenter;
+import com.example.marius.helpmesee.util.HmsActivity;
 
 /**
  * Created by Marius Olariu <mariuslucian.olariu@gmail.com>
@@ -29,18 +29,19 @@ public class CommandProcessor {
   /**
    * @param detectedText - detected text
    */
-  public void processCommand(String detectedText,  Context currentContext) {
+  public void processCommand(String detectedText,  HmsActivity hmsActivity) {
     AppFeaturesEnum feature = AppFeaturesEnum.stringToFeature(detectedText);
 
     //if it's not a feature then it might be another command like "Take Picture"
 
     if (feature != null) {
-      changeScreen(feature, currentContext);
+      changeScreen(feature, hmsActivity.getBaseContext());
     }//process other types of commands
     else {
-      Log.i(Constants.HMS_INFO, "Cannot process: " + detectedText);
+      hmsActivity.execute(detectedText);
     }
 
+      //Log.i(Constants.HMS_INFO, "Cannot process: " + detectedText);
   }
 
   private void changeScreen(AppFeaturesEnum feature,  Context currentContext) {

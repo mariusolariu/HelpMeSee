@@ -203,4 +203,9 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
     GpsCheckTask gpsCheckTask = new GpsCheckTask(this);
     gpsCheckTask.execute();
   }
+
+  @Override
+  public void execute(String detectedText) {
+
+  }
 }

@@ -2,7 +2,6 @@ package com.example.marius.helpmesee.app_logic;
 
 import android.content.Intent;
 import android.speech.RecognizerIntent;
-import android.util.Log;
 import java.util.Locale;
 
 /**
@@ -12,12 +11,22 @@ public class Constants {
   public static final String HMS_INFO = "HmsInfo"; //tag used for logging info
   public static final int SPEECH_INPUT_CODE = 1;
   public static final Intent SPEECH_INTENT;
+  public static final float EARTH_RADIUS_MILES = 3964.037911746f;
+  public static final float EARTH_RADIUS_M = 6371 * 1000;
+  public static final float EARTH_RADIUS_KM = 6371 ;
+
 
   //string constants
-  public static final String ORIGIN = "origin";
-  public static final String DESTINATION = "destination";
-  public static final String MODE = "mode";
-  public static final String WALKING = "walking";
+  public static final String PATH_ORIGIN = "origin";
+  public static final String PATH_DESTINATION = "destination";
+  public static final String PATH_MODE = "mode";
+  public static final String PATH_WALKING = "walking";
+  
+  //directions screen bundle keys
+  public static final String DESTINATION_TEXT = "destination";
+  public static final String DURATION_TIME = "duration";
+  public static final String DISTANCE_KM = "distance";
+  public static final String CURRENT_PATH_STRING = "currentPath";
 
 
   /**
@@ -27,8 +36,7 @@ public class Constants {
     SPEECH_INTENT = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
     SPEECH_INTENT
         .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-    String language = Locale.getDefault().getLanguage();
-    Log.i(HMS_INFO, "Detected language:" + language);
+    Locale language = Locale.ENGLISH;
     SPEECH_INTENT.putExtra(RecognizerIntent.EXTRA_LANGUAGE, language);
     SPEECH_INTENT.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say something...");
   }

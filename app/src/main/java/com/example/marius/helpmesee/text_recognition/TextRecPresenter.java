@@ -16,4 +16,9 @@ public class TextRecPresenter extends TextRecListener {
     rootView = new TextRecViewImpl(this, null);
     setContentView(rootView.getAndroidLayoutView());
   }
+
+  @Override
+  public void execute(String detectedText) {
+
+  }
 }

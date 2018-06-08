@@ -12,5 +12,5 @@ public interface PathFoundListener {
    * Callback method
    * @param path - dto object
    */
-  void pathsFound(List<com.example.marius.helpmesee.directions.model.Path> path);
+  void pathFound(List<com.example.marius.helpmesee.directions.model.Path> path);
 }

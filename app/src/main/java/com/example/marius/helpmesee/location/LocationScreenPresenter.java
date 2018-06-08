@@ -20,4 +20,8 @@ public class LocationScreenPresenter extends LocationScreenListener {
   }
 
 
+  @Override
+  public void execute(String detectedText) {
+
+  }
 }

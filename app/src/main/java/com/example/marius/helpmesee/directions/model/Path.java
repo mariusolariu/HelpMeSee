@@ -57,5 +57,4 @@ public class Path {
   public List<LatLng> getCoordinatesLatLng() {
     return coordinatesLatLng;
   }
-
 }

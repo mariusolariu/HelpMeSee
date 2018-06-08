@@ -6,4 +6,15 @@
   <string name="gps_off_message">Please turn Gps on in order to use this app.</string>
   <string name="network_off_title">Internet can\'t be reached</string>
   <string name="OK">Ok</string>
+  <string name="distance_km">Distance</string>
+  <string name="_0_km">0 km</string>
+  <string name="duration">Duration</string>
+  <string name="_0_min">0 min</string>
+  <string name="find_path">Find Path</string>
+  <string-array name="test_locations">
+    <item>catedrala Mitropolitana Timisoara</item>
+    <item>auchan Timisoara</item>
+    <item>biblioteca Universitatii Politehnica Timisoara</item>
+    <item>baza 2 Upt</item>
+  </string-array>
 </resources>

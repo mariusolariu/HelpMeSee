@@ -1,12 +1,18 @@
 package com.example.marius.helpmesee.util;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 import com.example.marius.helpmesee.app_logic.CommandProcessor;
 import com.example.marius.helpmesee.app_logic.Constants;
+import com.example.marius.helpmesee.app_logic.SpecificScreenVoiceCommand;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by Marius Olariu <mariuslucian.olariu@gmail.com>
@@ -16,7 +22,15 @@ import java.util.ArrayList;
 /**
  * Each presenter/activity of Hms should have the following methods
  */
-public abstract class HmsActivity extends AppCompatActivity {
+public abstract class HmsActivity extends AppCompatActivity implements  TextToSpeech.OnInitListener,
+    SpecificScreenVoiceCommand {
+  protected TextToSpeech textToSpeech;
+
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    textToSpeech = new TextToSpeech(this, this);
+  }
 
   public void startRecording() {
     try {
@@ -45,4 +59,29 @@ public abstract class HmsActivity extends AppCompatActivity {
     }
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+
+    if (textToSpeech != null) {
+      textToSpeech.stop();
+      textToSpeech.shutdown();
+    }
+  }
+
+  @Override
+  /**
+   * A TextToSpeech instance can only be used to synthesize text once it has completed its initialization.
+   * Implement the TextToSpeech.OnInitListener to be notified of the completion of the initialization.
+   */
+  public void onInit(int status) {
+    if (status == TextToSpeech.SUCCESS){
+      textToSpeech.setLanguage(Locale.ENGLISH);
+      //can set pitch and rate here as well
+      textToSpeech.setSpeechRate(0.9f);
+    }else{
+      Log.e(Constants.HMS_INFO, "Text to speech instance initialization failed!" );
+      Toast.makeText(this,"Text to speech instance initialization failed!", Toast.LENGTH_SHORT).show();
+    }
+  }
 }

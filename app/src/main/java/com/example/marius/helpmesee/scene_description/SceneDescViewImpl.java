@@ -28,4 +28,15 @@ public class SceneDescViewImpl implements SceneDescView {
   public Bundle getViewState() {
     return null;
   }
+
+  @Override
+  public void onSaveViewState(Bundle outState) {
+
+  }
+
+  @Override
+  public void onRestoreInstanceState(Bundle inState) {
+
+  }
+
 }

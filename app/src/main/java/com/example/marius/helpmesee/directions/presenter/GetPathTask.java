@@ -68,7 +68,7 @@ public class GetPathTask extends AsyncTask<URL, Void, Void> {
   @Override
   protected void onPostExecute(Void aVoid) {
     //result
-    pathFoundListener.pathsFound(paths);
+    pathFoundListener.pathFound(paths);
   }
 
   /**

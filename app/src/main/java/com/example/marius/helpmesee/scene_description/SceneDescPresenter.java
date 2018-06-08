@@ -17,4 +17,9 @@ public class SceneDescPresenter extends HmsActivity {
     rootView = new SceneDescViewImpl(this, null);
     setContentView(rootView.getAndroidLayoutView());
   }
+
+  @Override
+  public void execute(String detectedText) {
+
+  }
 }

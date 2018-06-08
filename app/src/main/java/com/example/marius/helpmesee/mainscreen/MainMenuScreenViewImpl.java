@@ -25,6 +25,16 @@ import java.util.List;
 
 public class MainMenuScreenViewImpl implements MainMenuScreenView {
 
+  @Override
+  public void onSaveViewState(Bundle outState) {
+
+  }
+
+  @Override
+  public void onRestoreInstanceState(Bundle inState) {
+
+  }
+
   private MainMenuScreenListener mainMenuScreenListener;
 
   private final int WIFI = 0;

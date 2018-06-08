@@ -13,12 +13,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
-    <EditText
+    <AutoCompleteTextView
       android:id="@+id/destACTV"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="@string/hintEnd"
       android:singleLine="true"
+      android:imeActionId="@integer/IME_ACTION_DONE"
       />
 
     <!-- focusable = true instructs TalkBack to read the whole content once-->
@@ -33,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:contentDescription="Distance"
+        android:contentDescription="@string/distance_km"
         android:src="@drawable/distance_ico"/>
 
       <TextView
@@ -43,14 +44,14 @@
         android:layout_weight="2"
         android:textSize="25sp"
         android:textAlignment="center"
-        android:hint="0 km"/>
+        android:hint="@string/_0_km"/>
 
       <ImageView
         android:id="@+id/durationIV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:contentDescription="Duration"
+        android:contentDescription="@string/duration"
         android:src="@drawable/time_ico"/>
 
       <TextView
@@ -60,7 +61,7 @@
         android:layout_weight="2"
         android:textSize="25sp"
         android:textAlignment="center"
-        android:hint="0 min"/>
+        android:hint="@string/_0_min"/>
     </LinearLayout>
 
   </LinearLayout>
@@ -99,7 +100,7 @@
     android:layout_alignParentLeft="true"
     android:drawableLeft="@drawable/directions_ico"
     android:drawableStart="@drawable/directions_ico"
-    android:text="Find path"
+    android:text="@string/find_path"
     android:textAllCaps="false"/>
 
 </RelativeLayout>
