@@ -1,4 +1,4 @@
-package com.example.marius.helpmesee.location;
+package com.example.marius.helpmesee.location.presenter;
 
 import com.example.marius.helpmesee.util.HmsActivity;
 
@@ -7,4 +7,7 @@ import com.example.marius.helpmesee.util.HmsActivity;
  */
 public abstract class LocationScreenListener extends HmsActivity {
 
+  public abstract void addContact();
+
+  public abstract void sendMessages();
 }

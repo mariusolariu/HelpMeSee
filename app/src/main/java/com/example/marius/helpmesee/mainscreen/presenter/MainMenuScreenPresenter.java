@@ -1,4 +1,4 @@
-package com.example.marius.helpmesee.mainscreen;
+package com.example.marius.helpmesee.mainscreen.presenter;
 
 /**
  * Created by Marius Olariu <mariuslucian.olariu@gmail.com>
@@ -11,6 +11,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -19,11 +20,13 @@ import android.widget.RelativeLayout.LayoutParams;
 import com.example.marius.helpmesee.app_logic.AppFeaturesEnum;
 import com.example.marius.helpmesee.app_logic.AppState;
 import com.example.marius.helpmesee.directions.presenter.DirectionsScreenPresenter;
-import com.example.marius.helpmesee.location.LocationScreenPresenter;
+import com.example.marius.helpmesee.location.presenter.LocationScreenPresenter;
 import com.example.marius.helpmesee.mainscreen.util.GpsCheckTask;
 import com.example.marius.helpmesee.mainscreen.util.GpsCheckTask.GpsVisiter;
 import com.example.marius.helpmesee.mainscreen.util.InternetCheckTask;
 import com.example.marius.helpmesee.mainscreen.util.InternetCheckTask.InternetVisiter;
+import com.example.marius.helpmesee.mainscreen.view.MainMenuScreenView;
+import com.example.marius.helpmesee.mainscreen.view.MainMenuScreenViewImpl;
 import com.example.marius.helpmesee.scene_description.SceneDescPresenter;
 import com.example.marius.helpmesee.text_recognition.TextRecPresenter;
 import java.util.ArrayList;
@@ -46,11 +49,12 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
     super.onCreate(savedInstanceState);
 
     //AppState.getInstance().setCurrentContext(this);
-    //TODO: save the size in SharedPreferences so that detectPhoneSize() is called only once, after the app was first launched
+    //td: save the size in SharedPreferences so that detectPhoneSize() is called only once, after the app was first launched
 
     if (appState.isAppFistTimeLaunched()) {
       detectPhoneSize();
       setSpeechButtonLayoutParams();
+      setLeftButtonLayoutParams();
     }
 
     rootView = new MainMenuScreenViewImpl(this, null);
@@ -62,6 +66,28 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
     rootView.displayAppFeatures(appFeaturesList);
 
 
+  }
+
+  /**
+   * Each screen, but the Main Screen, has a button on the bottom-left side
+   * Thus these settings ensures that this button stays on the same positions on all screens
+   * so it is more easy for the user to access it
+   */
+  private void setLeftButtonLayoutParams() {
+    int phone_height_dp = AppState.getInstance().getPhone_height_dp();
+    int phone_width_dp = AppState.getInstance().getPhone_width_dp();
+    int spButtonWidth = phone_width_dp;
+    int spButtonHeight = phone_height_dp / 3;
+
+    LayoutParams layoutParamsFP = new LayoutParams(spButtonWidth, spButtonHeight);
+    layoutParamsFP.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+    layoutParamsFP.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+    layoutParamsFP.bottomMargin = phone_height_dp / 20;
+    layoutParamsFP.rightMargin = phone_height_dp / 20;
+    layoutParamsFP.leftMargin = phone_height_dp / 20;
+    layoutParamsFP.topMargin = phone_height_dp / 20;
+
+    AppState.getInstance().setBottomLeftButtonLP(layoutParamsFP);
   }
 
 

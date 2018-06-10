@@ -1,4 +1,4 @@
-package com.example.marius.helpmesee.mainscreen.util;
+package com.example.marius.helpmesee.mainscreen.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

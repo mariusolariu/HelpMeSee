@@ -1,4 +1,4 @@
-package com.example.marius.helpmesee.mainscreen;
+package com.example.marius.helpmesee.mainscreen.presenter;
 
 import com.example.marius.helpmesee.util.HmsActivity;
 

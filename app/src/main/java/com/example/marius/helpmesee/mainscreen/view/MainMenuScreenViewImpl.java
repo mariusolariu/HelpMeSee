@@ -1,4 +1,4 @@
-package com.example.marius.helpmesee.mainscreen;
+package com.example.marius.helpmesee.mainscreen.view;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -12,13 +12,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import com.example.marius.helpmesee.R;
 import com.example.marius.helpmesee.app_logic.AppState;
-import com.example.marius.helpmesee.mainscreen.util.HmsArrayAdapter;
-import com.example.marius.helpmesee.util.HmsActivity;
+import com.example.marius.helpmesee.mainscreen.presenter.MainMenuScreenListener;
 import java.util.List;
 
 /**
@@ -122,7 +120,7 @@ public class MainMenuScreenViewImpl implements MainMenuScreenView {
             break;
 
           case ROAMING:
-            //FIXME does not launch the activity where you can turn mobile data on
+            //fm: does not launch the activity where you can turn mobile data on
             Intent roamingIntent = new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS);
             context.startActivity(roamingIntent);
             break;

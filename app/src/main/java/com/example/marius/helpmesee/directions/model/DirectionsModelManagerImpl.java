@@ -45,10 +45,6 @@ public class DirectionsModelManagerImpl implements DirectionsModelManager, Instr
     Float bearing;
     Float speed = 0f;
 
-    // FIXME: 5/28/2018 Not sure if I should be reading sensor data to detect bearing when isn't given by location
-    // or use the last one (before the user stopped moving)
-
-
     if (newLocation.hasSpeed()) {
       speed = newLocation.getSpeed();
       previousSpeed = speed;

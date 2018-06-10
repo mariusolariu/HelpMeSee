@@ -411,7 +411,7 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
   private void setUserCurrentBearing() {
     sensorManager.registerListener(orientationSensorListener, sensorOrientation,
         SensorManager.SENSOR_DELAY_NORMAL);
-    // FIXME:  It passes 0 as initial bearing, too fast
+    //   It passes 0 as initial bearing, too fast
     currentPhoneBearing = orientationSensorListener.getCurrentBearing();
     sensorManager.unregisterListener(orientationSensorListener);
   }
@@ -439,7 +439,7 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
 
     } else {
       Log.e(DIRECTIONS_SCREEN_TAG, "Couldn't find a valid path!");
-      // TODO:  add an id for each request to text textToSpeech and check status
+      // td:  add an id for each request to text textToSpeech and check status
       textToSpeech.speak("Couldn't find a valid path! Please try a more detailed description!",
           TextToSpeech.QUEUE_ADD, null);
       Toast.makeText(this, "Couldn't find a valid path! Please try a more detailed description!",

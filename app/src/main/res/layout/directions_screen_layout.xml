@@ -4,7 +4,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".directions.presenter.DirectionsScreenPresenter">
+  android:background="@color/common_google_signin_btn_text_light_pressed"
+  tools:context=".directions.presenter.DirectionsScreenPresenter"
+  android:padding="5dp">
 
 
   <LinearLayout
@@ -12,14 +14,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingBottom="5dp"
     >
     <AutoCompleteTextView
       android:id="@+id/destACTV"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:textColor="@color/white"
+      android:paddingBottom="10dp"
+      android:minWidth="48dp"
+      android:background="@drawable/tv_shape"
+      android:minHeight="48dp"
+      android:padding="10dp"
       android:hint="@string/hintEnd"
       android:singleLine="true"
       android:imeActionId="@integer/IME_ACTION_DONE"
+      android:textColorHint="@color/white"
       />
 
     <!-- focusable = true instructs TalkBack to read the whole content once-->
@@ -27,6 +37,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:focusable="true"
+      android:minWidth="48dp"
+      android:minHeight="48dp"
+      android:background="@drawable/tv_shape"
       android:orientation="horizontal">
 
       <ImageView
@@ -42,15 +55,20 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="2"
+        android:padding="5dp"
         android:textSize="25sp"
+        android:textColor="@color/white"
         android:textAlignment="center"
-        android:hint="@string/_0_km"/>
+        android:hint="@string/_0_km"
+        android:textColorHint="@color/white"/>
 
       <ImageView
         android:id="@+id/durationIV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         android:contentDescription="@string/duration"
         android:src="@drawable/time_ico"/>
 
@@ -59,9 +77,12 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="2"
+        android:textColor="@color/white"
+        android:padding="5dp"
         android:textSize="25sp"
         android:textAlignment="center"
-        android:hint="@string/_0_min"/>
+        android:hint="@string/_0_min"
+        android:textColorHint="@color/white"/>
     </LinearLayout>
 
   </LinearLayout>
@@ -69,6 +90,8 @@
   <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/map"
+    android:minWidth="48dp"
+    android:minHeight="48dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@+id/speechButton_directions"
@@ -82,7 +105,9 @@
     android:id="@+id/speechButton_directions"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp"
+    android:minWidth="48dp"
+    android:minHeight="48dp"
+    android:layout_margin="10dp"
     android:layout_alignParentBottom="true"
     android:layout_alignParentEnd="true"
     android:layout_alignParentRight="true"
@@ -95,7 +120,9 @@
     android:id="@+id/findPathB"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp"
+    android:layout_margin="10dp"
+    android:minWidth="48dp"
+    android:minHeight="48dp"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
     android:drawableLeft="@drawable/directions_ico"

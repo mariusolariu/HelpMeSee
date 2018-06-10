@@ -18,6 +18,7 @@ public class AppState {
   private boolean appFistTimeLaunched = true;
 
   private LayoutParams speechButtonLayoutParams;
+  private LayoutParams bottomLeftButtonLP;
 
 
   public static AppState getInstance() {
@@ -59,4 +60,11 @@ public class AppState {
     this.speechButtonLayoutParams = speechButtonLayoutParams;
   }
 
+  public void setBottomLeftButtonLP(LayoutParams bottomLeftButtonLP) {
+    this.bottomLeftButtonLP = bottomLeftButtonLP;
+  }
+
+  public LayoutParams getBottomLeftButtonLP() {
+    return bottomLeftButtonLP;
+  }
 }

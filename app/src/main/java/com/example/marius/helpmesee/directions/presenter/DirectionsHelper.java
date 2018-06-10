@@ -51,29 +51,6 @@ public class DirectionsHelper {
     return duration.toString();
   }
 
-  /**
-   */
-  public Address getAdressFromLocation(Location location, Context context) {
-    Geocoder geocoder = new Geocoder(context);
-
-    try {
-      List<Address> addresses = geocoder
-          .getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
-      if (addresses.size() > 0) {
-        Address address = addresses.get(0);
-        Log.i(Constants.HMS_INFO, "Detected current address: " + address);
-        return address;
-      }
-
-    } catch (IOException e) {
-      e.printStackTrace();
-      Log.d(Constants.HMS_INFO, "Couldn't reverse geocode from location: " + location);
-    }
-
-    return null;
-  }
-
   private static double degreeToRadians(double latLong) {
     return (Math.PI * latLong / 180.0);
   }
