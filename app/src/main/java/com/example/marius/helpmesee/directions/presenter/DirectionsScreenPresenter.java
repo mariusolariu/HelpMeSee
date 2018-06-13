@@ -37,7 +37,7 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -89,9 +89,6 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
   private PathProvider pathProvider;
   private boolean requestedLocationUpdates;
   private DirectionsModelManagerImpl directionsModelManagerImpl;
-  private Marker futureLocationMarker;
-  private Marker normalLocationMarker;
-  private Marker targetLocationMarker;
   private SensorManager sensorManager;
   private Sensor sensorOrientation;
   private Float currentPhoneBearing;
@@ -99,6 +96,15 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
   private List<LatLng> currentPathCoordinates;
   private Bundle instanceBundle;
   private long startTime;
+  /**
+   * used to avoid useless animation of camera
+   */
+  private float previousBearing;
+
+  //used for real-time debugging
+  private Marker futureLocationMarker;
+  private Marker normalLocationMarker;
+  private Marker targetLocationMarker;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,6 +142,7 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
     //algorithm : compute bearing of direction between the two closest points to user location
     // compare user's direction of moving bearing with the bearing between two stopPoints
     // notify user to go left or right
+
     locationCallback = new LocationCallback() {
       @Override
       public void onLocationResult(LocationResult locationResult) {
@@ -153,6 +160,12 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
           directionsModelManagerImpl.fetchInstruction(newLocation);
           //Toast.makeText(DirectionsScreenPresenter.this, "Bearing: " + newLocation.getSpeed(), Toast.LENGTH_SHORT).show();
           //  Log.i(DIRECTIONS_SCREEN_TAG, latitude + "," + longitude + " " + bearing);
+
+          //avoid useless calls to method
+          if ((bearing != 0) && (bearing != previousBearing)) {
+            adjustCamera(bearing, latitude, longitude);
+            previousBearing = bearing;
+          }
         }
       }
 
@@ -160,17 +173,17 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
   }
 
 
-  private void updateCameraBearing(float bearing) {
+  private void adjustCamera(float bearing, double latitude, double longitude) {
     if (googleMap == null) {
       return;
     }
     CameraPosition camPos = CameraPosition
-        .builder(
-            googleMap.getCameraPosition() // current Camera
-        )
+        .builder(googleMap.getCameraPosition())
         .bearing(bearing)
+        .target(new LatLng(latitude, longitude))
         .build();
     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos));
+
   }
 
   private void initialize() {
@@ -206,6 +219,7 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
     this.instanceBundle = savedInstanceState;
   }
 
+
   private List<LatLng> toListLatLng(String currentPathString) {
     ArrayList<LatLng> coordinates = new ArrayList<>();
     int size = currentPathString.length();
@@ -236,7 +250,9 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
     this.googleMap = googleMap;
 
     googleMap.setMyLocationEnabled(true);
-    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+    //my location button is bad for accesibility as described by Scanner
+    googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
     getDeviceLocation();
 
@@ -484,14 +500,14 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
 //      marker.showInfoWindow();
 //    }
 
-    googleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-      @Override
-      public boolean onMarkerClick(Marker marker) {
-        LatLng latLng = marker.getPosition();
-        Log.i(DIRECTIONS_SCREEN_TAG, "Clicked marker:" + latLng);
-        return false;
-      }
-    });
+//    googleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+//      @Override
+//      public boolean onMarkerClick(Marker marker) {
+//        LatLng latLng = marker.getPosition();
+//        Log.i(DIRECTIONS_SCREEN_TAG, "Clicked marker:" + latLng);
+//        return false;
+//      }
+//    });
 
     googleMap.addPolyline(polylineOptions);
     final LatLng destinationLatLng = coordinatesLatLng.get(coordinatesLatLng.size() - 1);
@@ -501,6 +517,8 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
         .position(destinationLatLng)
         .icon(BitmapDescriptorFactory
             .fromResource(R.mipmap.stop_flag)));
+
+    textToSpeech.speak("Path found, you can start!", TextToSpeech.QUEUE_ADD, null);
   }
 
   @Override
@@ -515,20 +533,49 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
 
   @Override
   public void onInstructionFetched(Instruction currentInstrForUser) {
-    if (currentInstrForUser != Instruction.STRAIGHT) {
-      textToSpeech.speak(currentInstrForUser.toString(), TextToSpeech.QUEUE_ADD, null);
-    } else {
-      long now = System.currentTimeMillis();
-      long elapsed = now - startTime;
-      /*
-    ensures that instructions "continue straight" are not spammed
-   */
-      long TIMER_THRESHOLD = 10000;
-      if (elapsed >= TIMER_THRESHOLD) {
-//        Log.i(DIRECTIONS_SCREEN_TAG, "elapsedTime: " + elapsed);
+//    if (currentInstrForUser != Instruction.STRAIGHT) {
+//      textToSpeech.speak(currentInstrForUser.toString(), TextToSpeech.QUEUE_ADD, null);
+//    } else {
+//      long now = System.currentTimeMillis();
+//      long elapsed = now - startTime;
+//      /*
+//    ensures that instructions "continue straight" are not spammed
+//   */
+//      long TIMER_THRESHOLD = 10000;
+//      if (elapsed >= TIMER_THRESHOLD) {
+////        Log.i(DIRECTIONS_SCREEN_TAG, "elapsedTime: " + elapsed);
+//        textToSpeech.speak(currentInstrForUser.toString(), TextToSpeech.QUEUE_ADD, null);
+//        startTime = System.currentTimeMillis();
+//      }
+//    }
+
+    switch (currentInstrForUser) {
+      case STRAIGHT:
+        long now = System.currentTimeMillis();
+        long elapsed = now - startTime;
+
+          /*
+            ensures that instructions "continue straight" are not spammed
+          */
+        long TIMER_THRESHOLD = 10000;
+        if (elapsed >= TIMER_THRESHOLD) {
+          //        Log.i(DIRECTIONS_SCREEN_TAG, "elapsedTime: " + elapsed);
+          textToSpeech.speak(currentInstrForUser.toString(), TextToSpeech.QUEUE_ADD, null);
+          startTime = System.currentTimeMillis();
+        }
+
+        break;
+
+      case END:
+        //user arrived at destination, clear map
         textToSpeech.speak(currentInstrForUser.toString(), TextToSpeech.QUEUE_ADD, null);
-        startTime = System.currentTimeMillis();
-      }
+        stopLocationUpdates();
+        requestedLocationUpdates = false;
+        googleMap.clear();
+
+        break;
+      default: // other types of instructions
+        textToSpeech.speak(currentInstrForUser.toString(), TextToSpeech.QUEUE_ADD, null);
     }
 
     // Log.i(Constants.HMS_INFO, currentInstrForUser.toString());

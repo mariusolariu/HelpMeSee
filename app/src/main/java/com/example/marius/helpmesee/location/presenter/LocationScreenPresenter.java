@@ -1,7 +1,6 @@
 package com.example.marius.helpmesee.location.presenter;
 
 import android.Manifest;
-import android.Manifest.permission;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -76,7 +75,7 @@ public class LocationScreenPresenter extends LocationScreenListener {
   protected void onResume() {
     super.onResume();
     isThisActivityInForeground = true;
-    getDeviceLocation();
+    detectUserCurrentAddress();
   }
 
   @Override
@@ -98,9 +97,10 @@ public class LocationScreenPresenter extends LocationScreenListener {
 
   @Override
   public void sendMessages() {
-    StringBuilder messageBody = new StringBuilder("I'm here: ");
+    StringBuilder messageBody = new StringBuilder("Hello,\n");
+    messageBody.append("I'm here: ");
     messageBody.append("(").append(currentLocation.getLatitude()).append(",")
-        .append(currentLocation.getLongitude()).append(")");
+        .append(currentLocation.getLongitude()).append(").\n");
     messageBody.append(" Can you come and pick me up please?");
     List<Contact> contacts = locationModelManager.getContacts();
 
@@ -113,13 +113,13 @@ public class LocationScreenPresenter extends LocationScreenListener {
     String message = messageBody.toString();
     for (Contact c : contacts) {
       Log.i(LOCATION_SCREEN_TAG, c.toString());
-      // sendMessage(c.phoneNumber, message);
+       sendMessage(c.phoneNumber, message);
     }
 
   }
 
 
-  private void getDeviceLocation() {
+  private void detectUserCurrentAddress() {
     try {
       Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
       locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
@@ -176,7 +176,7 @@ public class LocationScreenPresenter extends LocationScreenListener {
 
       if (addresses.size() > 0) {
         //Log.i(Constants.HMS_INFO, "Detected current address: " + address);
-        return addresses.get(0);;
+        return addresses.get(0);
       }
 
     } catch (IOException e) {

@@ -7,7 +7,7 @@
   <string name="network_off_title">Internet can\'t be reached</string>
   <string name="OK">Ok</string>
   <string name="distance_km">Distance</string>
-  <string name="_0_km">0 km</string>
+  <string name="a">0 km</string>
   <string name="duration">Duration</string>
   <string name="_0_min">0 min</string>
   <string name="find_path"> Find Path </string>

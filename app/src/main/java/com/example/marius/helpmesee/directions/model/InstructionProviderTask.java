@@ -150,20 +150,16 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
     Instruction resultInstr = null;
 //    Log.i(Constants.HMS_INFO, "Right: " + angle);
 
-    if (isWithin(0, 30, angle)) {
+    if (isWithin(0, 60, angle)) {
       resultInstr = Instruction.T_RIGHT_150;
     }
 
-    if (isWithin(31, 60, angle)) {
-      resultInstr = Instruction.T_RIGHT_120;
-    }
-
-    if (isWithin(61, 140, angle)) {
+    if (isWithin(61, 120, angle)) {
       resultInstr = Instruction.T_RIGHT_90;
     }
 
-    if (isWithin(141, 160, angle)) {
-      resultInstr = Instruction.T_RIGHT_140;
+    if (isWithin(121, 160, angle)) {
+      resultInstr = Instruction.T_RIGHT_30;
     }
 
     if (isWithin(161, 180, angle)) {
@@ -180,20 +176,16 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
 
 //    Log.i(Constants.HMS_INFO, "Left: " + angle);
 
-    if (isWithin(0, 30, angle)) {
+    if (isWithin(0, 60, angle)) {
       resultInstr = Instruction.T_LEFT_150;
     }
 
-    if (isWithin(31, 60, angle)) {
-      resultInstr = Instruction.T_LEFT_120;
-    }
-
-    if (isWithin(61, 140, angle)) {
+    if (isWithin(61, 120, angle)) {
       resultInstr = Instruction.T_LEFT_90;
     }
 
-    if (isWithin(141, 160, angle)) {
-      resultInstr = Instruction.T_LEFT_140;
+    if (isWithin(121, 160, angle)) {
+      resultInstr = Instruction.T_LEFT_30;
     }
 
     if (isWithin(161, 180, angle)) {

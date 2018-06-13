@@ -58,8 +58,8 @@
         android:padding="5dp"
         android:textSize="25sp"
         android:textColor="@color/white"
+        android:hint="@string/a"
         android:textAlignment="center"
-        android:hint="@string/_0_km"
         android:textColorHint="@color/white"/>
 
       <ImageView
@@ -96,6 +96,7 @@
     android:layout_height="wrap_content"
     android:layout_above="@+id/speechButton_directions"
     android:layout_below="@+id/infoLayout"
+    android:contentDescription = "Map on which the path is drawn!"
     android:name="com.google.android.gms.maps.SupportMapFragment"
     tools:context="mm.spp.root.MapsActivity"/>
 

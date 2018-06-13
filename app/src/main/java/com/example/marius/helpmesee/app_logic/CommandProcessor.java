@@ -27,7 +27,7 @@ public class CommandProcessor {
   }
 
   /**
-   * @param detectedText - detected text
+   * @param detectedText - detected text from voice speech
    */
   public void processCommand(String detectedText,  HmsActivity hmsActivity) {
     AppFeaturesEnum feature = AppFeaturesEnum.stringToFeature(detectedText);
@@ -39,7 +39,6 @@ public class CommandProcessor {
       hmsActivity.execute(detectedText);
     }
 
-      //Log.i(Constants.HMS_INFO, "Cannot process: " + detectedText);
   }
 
   private void changeScreen(AppFeaturesEnum feature,  Context currentContext) {

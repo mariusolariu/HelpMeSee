@@ -53,6 +53,8 @@ public abstract class HmsActivity extends AppCompatActivity implements  TextToSp
           Log.i(Constants.HMS_INFO, "Detected text:" + detectedText);
 
           CommandProcessor.getInstance().processCommand(detectedText, this);
+        }else{
+          textToSpeech.speak("Could not interpret voice command!", TextToSpeech.QUEUE_ADD, null);
         }
 
         break;
