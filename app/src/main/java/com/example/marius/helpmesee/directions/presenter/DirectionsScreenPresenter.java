@@ -18,14 +18,18 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import com.example.marius.helpmesee.R;
+import com.example.marius.helpmesee.app_logic.AppFeaturesEnum;
 import com.example.marius.helpmesee.app_logic.Constants;
 import com.example.marius.helpmesee.directions.model.DirectionsModelListener;
+import com.example.marius.helpmesee.directions.model.DirectionsModelManager;
 import com.example.marius.helpmesee.directions.model.DirectionsModelManagerImpl;
 import com.example.marius.helpmesee.directions.model.Instruction;
-import com.example.marius.helpmesee.directions.model.Path;
+import com.example.marius.helpmesee.directions.model.PathDto;
 import com.example.marius.helpmesee.directions.view.DirectionsScreenListener;
 import com.example.marius.helpmesee.directions.view.DirectionsScreenView;
 import com.example.marius.helpmesee.directions.view.DirectionsScreenViewImpl;
+import com.example.marius.helpmesee.util.ModelsFactory;
+import com.example.marius.helpmesee.util.ViewsFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -37,7 +41,6 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -88,13 +91,16 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
   private Location currentUserLocation;
   private PathProvider pathProvider;
   private boolean requestedLocationUpdates;
-  private DirectionsModelManagerImpl directionsModelManagerImpl;
+  private DirectionsModelManager directionsMM;
   private SensorManager sensorManager;
   private Sensor sensorOrientation;
   private Float currentPhoneBearing;
   private HmsSensorEventListener orientationSensorListener;
   private List<LatLng> currentPathCoordinates;
   private Bundle instanceBundle;
+  //predict future location in DELTA_T seconds
+  private final static Float DELTA_T = 3f;
+  private final static Float PATH_RADIUS = 3.5f;
   private long startTime;
   /**
    * used to avoid useless animation of camera
@@ -110,12 +116,13 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    rootView = new DirectionsScreenViewImpl(this, null);
+    rootView = (DirectionsScreenView) ViewsFactory.createView(this, AppFeaturesEnum.DIRECTIONS);
     rootView.setScreenListener(this);
     setContentView(rootView.getAndroidLayoutView());
 
-    directionsModelManagerImpl = new DirectionsModelManagerImpl();
-    directionsModelManagerImpl.setModelListener(this);
+    directionsMM = (DirectionsModelManager) ModelsFactory
+        .createModel(this, AppFeaturesEnum.DIRECTIONS);
+    directionsMM.setModelListener(this);
 
     /**
      * A Fragment is a piece of an application's user interface or behavior that can be placed in an Activity <br>
@@ -145,27 +152,27 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
 
     locationCallback = new LocationCallback() {
       @Override
-      public void onLocationResult(LocationResult locationResult) {
-        if (locationResult == null) {
+      public void onLocationResult(LocationResult lRs) {
+        if (lRs == null) {
           return;
         }
-        for (Location newLocation : locationResult.getLocations()) {
+        for (Location newLocation : lRs.getLocations()) {
 
           double latitude = newLocation.getLatitude();
           double longitude = newLocation.getLongitude();
           float bearing = newLocation.getBearing();
           // Log.i(DIRECTIONS_SCREEN_TAG,
           //     /*time + " (" + lat + ", " + lng + ")" +*/ " Bearing: " + bearing + "\n Accuracy: " + accuracy);
-
-          directionsModelManagerImpl.fetchInstruction(newLocation);
+          directionsMM.fetchInstruction(newLocation);
           //Toast.makeText(DirectionsScreenPresenter.this, "Bearing: " + newLocation.getSpeed(), Toast.LENGTH_SHORT).show();
-          //  Log.i(DIRECTIONS_SCREEN_TAG, latitude + "," + longitude + " " + bearing);
+          // Log.i(DIRECTIONS_SCREEN_TAG,  + latitude + "," + longitude);
 
           //avoid useless calls to method
           if ((bearing != 0) && (bearing != previousBearing)) {
             adjustCamera(bearing, latitude, longitude);
             previousBearing = bearing;
           }
+
         }
       }
 
@@ -262,9 +269,9 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
       String currentPathString = instanceBundle.getString(Constants.CURRENT_PATH_STRING);
       if (currentPathString != null) {
         currentPathCoordinates = toListLatLng(currentPathString);
-        drawPathOnGoogleMap(currentPathCoordinates);
+        drawPathOnMap(currentPathCoordinates);
       }
-      directionsModelManagerImpl.initialize(currentPathCoordinates, 5, 3, currentPhoneBearing);
+      directionsMM.initialize(currentPathCoordinates, PATH_RADIUS, DELTA_T, currentPhoneBearing);
 
       requestedLocationUpdates = true;
 
@@ -300,17 +307,13 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
   }
 
   /**
-   * A fast update interval of 5000 milliseconds causes <br>
-   * the fused location provider to return location updates that are accurate to <br>
-   * within A FEW FEET.
+   * Location updates are received each second
    */
-  protected void createLocationRequest() {
+  private void createLocationRequest() {
     locationRequest = new LocationRequest();
-    locationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-    locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+    locationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS); // 2000 ms
+    locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS); // 1000 ms
     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-
   }
 
   private void buildLocationRequestSettings() {
@@ -321,9 +324,6 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
     task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
       @Override
       public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-        // All location settings are satisfied. The client can initialize
-        // location requests here.
-        // ...
         Log.i(DIRECTIONS_SCREEN_TAG, "Location settings are ok!");
       }
     });
@@ -332,16 +332,11 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
       @Override
       public void onFailure(@NonNull Exception e) {
         if (e instanceof ResolvableApiException) {
-          // Location settings are not satisfied, but this can be fixed
-          // by showing the user a dialog.
           try {
-            // Show the dialog by calling startResolutionForResult(),
-            // and check the result in onActivityResult().
             ResolvableApiException resolvable = (ResolvableApiException) e;
             resolvable.startResolutionForResult(DirectionsScreenPresenter.this,
                 REQUEST_CHECK_SETTINGS);
           } catch (IntentSender.SendIntentException sendEx) {
-            // Ignore the error.
           }
         }
       }
@@ -434,21 +429,20 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
 
 
   @Override
-  public void pathFound(List<Path> paths) {
-    if (paths != null && paths.size() > 0) {
-      currentPathCoordinates = paths.get(0).getCoordinatesLatLng();
-      Path pathDto = paths.get(0);
+  public void onPathsFound(List<PathDto> pathDtos) {
+    if (pathDtos != null && pathDtos.size() > 0) {
+      currentPathCoordinates = pathDtos.get(0).coordinatesLatLng;
+      PathDto pathDto = pathDtos.get(0);
 
-      String duration = DirectionsHelper.prettyReadDuration(pathDto.getTimeM());
+      String duration = DirectionsHelper.prettyReadDuration(pathDto.timeM);
       rootView.setDuration(duration);
 
-      String distance = String.valueOf(pathDto.getDistanceKM()) + "km";
+      String distance = String.valueOf(pathDto.distanceKM) + "km";
       rootView.setDistance(distance);
 
-      List<LatLng> coordinatesLatLng = pathDto.getCoordinatesLatLng();
-      drawPathOnGoogleMap(coordinatesLatLng);
+      drawPathOnMap(currentPathCoordinates);
 
-      directionsModelManagerImpl.initialize(coordinatesLatLng, 3, 5f, currentPhoneBearing);
+      directionsMM.initialize(currentPathCoordinates, PATH_RADIUS, DELTA_T, currentPhoneBearing);
 
       requestedLocationUpdates = true;
       startLocationUpdates();
@@ -463,7 +457,7 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
     }
   }
 
-  private void drawPathOnGoogleMap(List<LatLng> coordinatesLatLng) {
+  private void drawPathOnMap(List<LatLng> coordinatesLatLng) {
 //here is a npe, google map
     googleMap.clear();
 
@@ -532,23 +526,7 @@ public class DirectionsScreenPresenter extends DirectionsScreenListener implemen
   }
 
   @Override
-  public void onInstructionFetched(Instruction currentInstrForUser) {
-//    if (currentInstrForUser != Instruction.STRAIGHT) {
-//      textToSpeech.speak(currentInstrForUser.toString(), TextToSpeech.QUEUE_ADD, null);
-//    } else {
-//      long now = System.currentTimeMillis();
-//      long elapsed = now - startTime;
-//      /*
-//    ensures that instructions "continue straight" are not spammed
-//   */
-//      long TIMER_THRESHOLD = 10000;
-//      if (elapsed >= TIMER_THRESHOLD) {
-////        Log.i(DIRECTIONS_SCREEN_TAG, "elapsedTime: " + elapsed);
-//        textToSpeech.speak(currentInstrForUser.toString(), TextToSpeech.QUEUE_ADD, null);
-//        startTime = System.currentTimeMillis();
-//      }
-//    }
-
+  public void onInstrFetched(Instruction currentInstrForUser) {
     switch (currentInstrForUser) {
       case STRAIGHT:
         long now = System.currentTimeMillis();

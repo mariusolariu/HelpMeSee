@@ -11,8 +11,9 @@ import android.view.View.OnClickListener;
 
 /**
  * For the moment there is no need to use this since most devices come with TalkBack
- * It could be enabled using a switch or a voice command.
+ *
  */
+
 public abstract class HmsOnClickListener implements OnClickListener {
 
   private final int SINGLE_TAP = 1;

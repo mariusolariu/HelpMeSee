@@ -3,7 +3,7 @@ package com.example.marius.helpmesee.directions.presenter;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.example.marius.helpmesee.app_logic.Constants;
-import com.example.marius.helpmesee.directions.model.Path;
+import com.example.marius.helpmesee.directions.model.PathDto;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 import java.io.BufferedReader;
@@ -25,8 +25,8 @@ import org.json.JSONObject;
 public class GetPathTask extends AsyncTask<URL, Void, Void> {
 
   private final PathFoundListener pathFoundListener;
-  //if alternatives=true there paths.size > 1
-  private List<Path> paths = new ArrayList<>();
+  //if alternatives=true there pathDtos.size > 1
+  private List<PathDto> pathDtos = new ArrayList<>();
 
   public GetPathTask(PathFoundListener pathFoundListener) {
     this.pathFoundListener = pathFoundListener;
@@ -68,7 +68,7 @@ public class GetPathTask extends AsyncTask<URL, Void, Void> {
   @Override
   protected void onPostExecute(Void aVoid) {
     //result
-    pathFoundListener.pathFound(paths);
+    pathFoundListener.onPathsFound(pathDtos);
   }
 
   /**
@@ -130,10 +130,10 @@ public class GetPathTask extends AsyncTask<URL, Void, Void> {
 
         float timeM = formatFloat((float) timeS / 60);
         float distanceKM = formatFloat((float) distanceM / 1000);
-        Path path = new Path(originAddress, destinationAddress, originLatLng, destinationLatLng,
+        PathDto pathDto = new PathDto(originAddress, destinationAddress, originLatLng, destinationLatLng,
             distanceKM,
             timeM, coordinates);
-        paths.add(path);
+        pathDtos.add(pathDto);
       }
 
     } catch (JSONException e) {

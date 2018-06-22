@@ -2,6 +2,8 @@ package com.example.marius.helpmesee.directions.model;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import com.example.marius.helpmesee.app_logic.Constants;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
@@ -13,13 +15,19 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
   private InstructionConsumer instructionConsumer;
   private LatLng userLocation;
   private Float speedMph;
-  private Float bearing;
+  private Float bearingUser;
   private Float pathRadiusMeters;
+  /**
+   * predict user location in <duation>  seconds
+   */
+  private Float deltaT;
   private List<GCSPoint> pathCoordinates;
   private GCSPoint segmentStart;
   private GCSPoint segmentEnd;
   private GCSPoint predictedFutureLocation;
   private GCSPoint normalPoint;
+
+  private static final float USER_TARGET_DISTANCE_THRESHOLD = 5.5f;
 
   /**
    * Target is chosen to be at maximum NP_FL_DISTANCE_THRESHOLD meters in front of normalPoint
@@ -41,11 +49,10 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
    *   Implementation of Craig Rynolds path folowing algorithm addpted by me to Geographic Coordinate System
    *   https://www.red3d.com/cwr/steer/PathFollow.html
    */
-  //FIXME Since the whole logic uses LatLng in background, convert from GCSPoint back to LatLng
   protected Instruction doInBackground(Object... objects) {
     userLocation = (LatLng) objects[0];
     speedMph = (Float) objects[1];
-    bearing = (Float) objects[2];
+    bearingUser = (Float) objects[2];
     pathRadiusMeters = (Float) objects[3];
 
     pathCoordinates = null;
@@ -55,24 +62,27 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
       e.printStackTrace();
     }
 
+    deltaT = (Float) objects[5];
+
     segmentStart = new GCSPoint(0, 0);
     segmentEnd = new GCSPoint(0, 0);
 
     //step 1: predict user's future location
     predictedFutureLocation = GCSPoint
-        .predictFutureLocation(userLocation, bearing, speedMph,
-            3f);
+        .predictFutureLocation(userLocation, bearingUser, speedMph,
+            deltaT);
 
     //step 2: find the normal point along the path
     normalPoint = findNormalPoint();
 
     //step 3: choose a target
     GCSPoint target = new GCSPoint(0, 0);
-    if (!normalPoint.equals(
+    if (normalPoint.equals(
         segmentEnd)) { //normalPoint is segmentEnd then there is no "normal point" for predictedFutureLocation on segment
-      target = chooseTarget();
-    } else {
       target = normalPoint;
+    } else {
+      // Log.i(Constants.HMS_INFO, "Normal Point Equals segment end \n");
+      target = chooseTarget();
     }
 
     double distanceU_SegEnd = GCSPoint
@@ -83,20 +93,16 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
      * when user approaches the end of a segment/end of journey notify him with special instruction
      */
     if ((distanceU_SegEnd >= 1) && (distanceU_SegEnd <= 5)) {
-      return notifyUser();
+      return notifyUserChangeDirection();
     }
 
     //step 4: notify the user with an instruction if necessary
-    double distanceFL_NP = GCSPoint.distanceBetweenPoints(predictedFutureLocation, normalPoint);
-    //Log.i(Constants.HMS_INFO, "future - np: " + distanceFL_NP);
+    double normalLineLength = GCSPoint.distanceBetweenPoints(predictedFutureLocation, normalPoint);
 
     Instruction instruction = Instruction.STRAIGHT;
-    if (distanceFL_NP > pathRadiusMeters) { //give instruction to user
+    if (normalLineLength > pathRadiusMeters) { //give instruction to user
       instruction = chooseInstruction(target);
     }
-//
-//    return new SimpleDto(userLocation, predictedFutureLocation, normalPoint, target,
-//        segmentStart, segmentEnd, instruction);
 
     return instruction;
   }
@@ -105,7 +111,7 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
   /**
    * Notifies the user about a turn or the end of journey
    */
-  private Instruction notifyUser() {
+  private Instruction notifyUserChangeDirection() {
     int indexSegmentEnd = pathCoordinates.indexOf(segmentEnd);
 
     //end of journey
@@ -121,7 +127,7 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
     int userSideToNextSegment = GCSPoint
         .detectPointSide(userLocation.latitude, userLocation.longitude, segmentEnd,
             nextSegmentEnd);
-    int angle = GCSPoint.angleBetween(segmentStart, segmentEnd, nextSegmentEnd);
+    int angleToNextSegment = GCSPoint.angleBetween(segmentStart, segmentEnd, nextSegmentEnd);
 
 //    Log.i(Constants.HMS_INFO,
 //        "\nSegment start: " + segmentStart + "\n SegmentEnd:" + segmentEnd + "\n NextSegmentEnd:"
@@ -138,11 +144,11 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
 
     switch (userSideToNextSegment) {
       case GCSPoint.RIGHT:
-        return giveRightSideInstructions(angle);
+        return giveRightSideInstructions(angleToNextSegment);
 
       //left
       default:
-        return giveLeftSideInstructions(angle);
+        return giveLeftSideInstructions(angleToNextSegment);
     }
   }
 
@@ -150,7 +156,7 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
     Instruction resultInstr = null;
 //    Log.i(Constants.HMS_INFO, "Right: " + angle);
 
-    if (isWithin(0, 60, angle)) {
+    if (isWithin(1, 60, angle)) {
       resultInstr = Instruction.T_RIGHT_150;
     }
 
@@ -162,7 +168,7 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
       resultInstr = Instruction.T_RIGHT_30;
     }
 
-    if (isWithin(161, 180, angle)) {
+    if (isWithin(161, 179, angle)) {
       resultInstr = Instruction.STRAIGHT;
     }
 
@@ -176,7 +182,7 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
 
 //    Log.i(Constants.HMS_INFO, "Left: " + angle);
 
-    if (isWithin(0, 60, angle)) {
+    if (isWithin(1, 60, angle)) {
       resultInstr = Instruction.T_LEFT_150;
     }
 
@@ -188,7 +194,7 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
       resultInstr = Instruction.T_LEFT_30;
     }
 
-    if (isWithin(161, 180, angle)) {
+    if (isWithin(161, 179, angle)) {
       resultInstr = Instruction.STRAIGHT;
     }
 
@@ -206,8 +212,10 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
       GCSPoint target) {
     Instruction instruction;
     int userSide = GCSPoint.detectPointSide(segmentStart, segmentEnd, predictedFutureLocation);
-    //TODO adjust this part to take into account this distance
-    double d1 = GCSPoint.distanceBetweenPoints(predictedFutureLocation, target);
+
+    double distanceUserTarget = GCSPoint
+        .distanceBetweenPoints(userLocation.latitude, userLocation.longitude, target.getLatitude(),
+            target.getLongitude());
 
 //    Log.i(Constants.HMS_INFO, "Dist bet target and future loc: " + d1);
 
@@ -216,29 +224,50 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
     } else {
       instruction = Instruction.RIGHT;
     }
+
+    switch (userSide) {
+      case GCSPoint.RIGHT:
+        if (distanceUserTarget > USER_TARGET_DISTANCE_THRESHOLD) {
+          instruction = Instruction.SLIGHTLY_LEFT;
+        } else {
+          instruction = Instruction.LEFT;
+        }
+
+        break;
+
+      case GCSPoint.LEFT:
+        if (distanceUserTarget > USER_TARGET_DISTANCE_THRESHOLD) {
+          instruction = Instruction.SLIGHTLY_RIGHT;
+        } else {
+          instruction = Instruction.RIGHT;
+        }
+
+        break;
+    }
     return instruction;
   }
 
 
+  /*
+    If the angle between the current segment and normal line is less than 60 degrees
+    then the user will receive the instruction to go "slightly" to a right/left.
+    Basically if the angle increases the target is set to be closer because the user needs to steer fast
+   */
   private GCSPoint chooseTarget() {
     GCSPoint target = new GCSPoint(0, 0);
-    //the target is chosen to be closer or further in concordance to
-    //how much the user is going to be off the path
-    double nP_to_FL_distance = GCSPoint
+    //the target is chosen to be closer or further in concordance to the length of normal line
+    double normalLineLength = GCSPoint
         .distanceBetweenPoints(normalPoint, predictedFutureLocation);
-//    double distanceMeters = 3; //Target is chosen to be some meters after the normal point
-    //chose the target to be 3 meters in front if possible, if not target is the end of segment
 
-    double bearing = GCSPoint.computeBearingSegment(segmentStart, segmentEnd);
+    double bearingCurrentSegment = GCSPoint.computeBearingSegment(segmentStart, segmentEnd);
 
     target = GCSPoint
-        .computeDestinatioinPoint(normalPoint, bearing, nP_to_FL_distance);
+        .computeDestinatioinPoint(normalPoint, normalLineLength, bearingCurrentSegment);
 
     double d1 = GCSPoint.distanceBetweenPoints(segmentStart, segmentEnd);
     double d2 = GCSPoint.distanceBetweenPoints(segmentStart, target);
 
-    // the chosen target is not on the current segment, thus we pick segment end as target
-    //this situation might occur at the end of segments
+    //if the chosen target is not on path then pick segmentEnd as target
     if (d2 > d1) {
       target = segmentEnd;
     }
@@ -261,7 +290,7 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
     for (int i = 0; i < size - 1; i++) {
       GCSPoint a = pathCoordinates.get(i);
       GCSPoint b = pathCoordinates.get(i + 1);
-      GCSPoint normalPoint = GCSPoint.computeNormalPoint(predictedFutureLocation, a,
+      GCSPoint normalPoint = GCSPoint.isNormalPointOnSegment(predictedFutureLocation, a,
           b);
 
       //if the normalPoint isn't on the ab segment
@@ -270,10 +299,11 @@ public class InstructionProviderTask extends AsyncTask<Object, Void, Instruction
         normalPoint = b;
       }
 
-      double distance = GCSPoint.distanceBetweenPoints(predictedFutureLocation, normalPoint);
+      double normalLineDistance = GCSPoint
+          .distanceBetweenPoints(predictedFutureLocation, normalPoint);
 
-      if (distance < minDistance) {
-        minDistance = distance;
+      if (normalLineDistance < minDistance) {
+        minDistance = normalLineDistance;
         optimumNormalPoint = normalPoint;
         segmentStart.setLatitude(a.getLatitude());
         segmentStart.setLongitude(a.getLongitude());

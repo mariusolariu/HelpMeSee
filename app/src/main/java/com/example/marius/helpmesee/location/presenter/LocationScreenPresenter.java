@@ -18,12 +18,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.telephony.SmsManager;
 import android.util.Log;
+import com.example.marius.helpmesee.app_logic.AppFeaturesEnum;
 import com.example.marius.helpmesee.app_logic.Constants;
 import com.example.marius.helpmesee.location.model.Contact;
 import com.example.marius.helpmesee.location.model.LocationModelManager;
 import com.example.marius.helpmesee.location.model.LocationModelManagerImpl;
 import com.example.marius.helpmesee.location.view.LocationScreenView;
 import com.example.marius.helpmesee.location.view.LocationScreenViewImpl;
+import com.example.marius.helpmesee.util.ModelsFactory;
+import com.example.marius.helpmesee.util.ViewsFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -53,9 +56,11 @@ public class LocationScreenPresenter extends LocationScreenListener {
     super.onCreate(savedInstanceState);
 
     //null is passed beacause the layout is the parent of all views, i.e. container=none
-    rootView = new LocationScreenViewImpl(this, null, this);
+    rootView = (LocationScreenView) ViewsFactory.createView(this, AppFeaturesEnum.LOCATION);
+    rootView.setListener(this);
+
     setContentView(rootView.getAndroidLayoutView());
-    locationModelManager = new LocationModelManagerImpl(this);
+    locationModelManager = (LocationModelManager) ModelsFactory.createModel(this, AppFeaturesEnum.LOCATION);
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
     askForNeededPermissions();

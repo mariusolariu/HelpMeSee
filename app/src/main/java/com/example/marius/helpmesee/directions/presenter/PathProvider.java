@@ -17,24 +17,24 @@ public class PathProvider {
   private static final String GOOGLE_DIRECTIONS_KEY = "AIzaSyBA8OV5JoXoCQe-LvYZ06tm0YmWGIUxxEE";
 
   private final PathFoundListener pathFoundListener;
-  private final HashMap<String,String> parameters;
+  private final HashMap<String,String> requestParameters;
 
 
   public PathProvider(PathFoundListener pathFoundListener) {
     this.pathFoundListener = pathFoundListener;
-    parameters = new HashMap<>();
+    requestParameters = new HashMap<>();
 
     //
-    parameters.put(Constants.PATH_ORIGIN,"");
-    parameters.put(Constants.PATH_DESTINATION,"");
-    parameters.put(Constants.PATH_MODE,Constants.PATH_WALKING);
+    requestParameters.put(Constants.PATH_ORIGIN,"");
+    requestParameters.put(Constants.PATH_DESTINATION,"");
+    requestParameters.put(Constants.PATH_MODE,Constants.PATH_WALKING);
   }
 
   public void start(){
     URL requestUrl = null;
 
     try {
-      requestUrl = createUrl();
+      requestUrl = createRequestUrl();
 
       //A task can be executed only once
       new GetPathTask(pathFoundListener).execute(requestUrl);
@@ -48,14 +48,14 @@ public class PathProvider {
 
   }
 
-  private URL createUrl() throws UnsupportedEncodingException, MalformedURLException {
+  private URL createRequestUrl() throws UnsupportedEncodingException, MalformedURLException {
     //SB not synchronized (I don't think is necessary)
     StringBuilder requestUrlSB = new StringBuilder(
         "");
 
     requestUrlSB.append(DIRECTIONS_ROOT_URL);
 
-    for (Map.Entry<String, String> entry : parameters.entrySet()) {
+    for (Map.Entry<String, String> entry : requestParameters.entrySet()) {
       String paramName = entry.getKey();
       String value = escapeString(entry.getValue());
 
@@ -77,11 +77,11 @@ public class PathProvider {
    * @param origin - current location of user, i.e. (latitude,longitude)
    */
   public void setOrigin(String origin){
-    parameters.put(Constants.PATH_ORIGIN, origin);
+    requestParameters.put(Constants.PATH_ORIGIN, origin);
   }
 
   public void setDestination(String destination){
-    parameters.put(Constants.PATH_DESTINATION, destination);
+    requestParameters.put(Constants.PATH_DESTINATION, destination);
   }
 
   /**

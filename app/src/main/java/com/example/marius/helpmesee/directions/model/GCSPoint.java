@@ -155,9 +155,9 @@ public class GCSPoint {
 
 
   /**
-   * Returns null if there is no end normal point on this segment
+   * Returns null if there is no  normal point on this segment
    */
-  public static GCSPoint computeNormalPoint(GCSPoint x, GCSPoint start, GCSPoint end) {
+  public static GCSPoint isNormalPointOnSegment(GCSPoint x, GCSPoint start, GCSPoint end) {
     double alongTrackDistance = computeAlongTrackDistance(x, start, end);
 
     //the x point is before line segment
@@ -179,10 +179,10 @@ public class GCSPoint {
   }
 
   public static GCSPoint predictFutureLocation(LatLng startPoint, Float bearing, Float speedMph,
-      Float duration) {
+      Float deltaT) {
     double bearingRadians = Math.toRadians(bearing);
-    double x = speedMph * Math.sin(bearingRadians) * duration / 3600;
-    double y = speedMph * Math.cos(bearingRadians) * duration / 3600;
+    double x = speedMph * Math.sin(bearingRadians) * deltaT / 3600;
+    double y = speedMph * Math.cos(bearingRadians) * deltaT / 3600;
 
     double yDegrees = Math.toDegrees(y);
     double endLat = startPoint.latitude + yDegrees / Constants.EARTH_RADIUS_MILES;
@@ -260,8 +260,8 @@ public class GCSPoint {
     }
 
     GCSPoint o = (GCSPoint) other;
-    return (!(o.getLatitude() != latitude)) &&
-        !(o.getLongitude() != longitude);
+    return ((o.getLatitude() == latitude) &&
+        (o.getLongitude() == longitude));
   }
 
   /*
@@ -280,8 +280,8 @@ public class GCSPoint {
 
     double dotProductResult = seg21.dotProduct(seg23);
 
-    double res = dotProductResult / (mag21 * mag23);
-    double angleRadians = Math.acos(res);
+    double result = dotProductResult / (mag21 * mag23);
+    double angleRadians = Math.acos(result);
     return (int) Math.toDegrees(angleRadians);
   }
 

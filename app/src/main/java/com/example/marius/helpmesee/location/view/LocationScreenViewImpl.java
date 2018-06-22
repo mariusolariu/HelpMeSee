@@ -32,10 +32,8 @@ public class LocationScreenViewImpl implements LocationScreenView {
   private TextView locationTV;
 
 
-  public LocationScreenViewImpl(Context context, ViewGroup container,
-      LocationScreenListener listener) {
+  public LocationScreenViewImpl(Context context, ViewGroup container) {
     this.context = context;
-    this.locationScreenListener = listener;
 
     rootView = LayoutInflater.from(context).inflate(R.layout.location_screen_layout, container);
 
@@ -117,5 +115,10 @@ public class LocationScreenViewImpl implements LocationScreenView {
       locationTV.append(",\n");
     }
 
+  }
+
+  @Override
+  public void setListener(LocationScreenListener listener) {
+    this.locationScreenListener = listener;
   }
 }

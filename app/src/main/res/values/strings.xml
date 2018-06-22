@@ -7,17 +7,17 @@
   <string name="network_off_title">Internet can\'t be reached</string>
   <string name="OK">Ok</string>
   <string name="distance_km">Distance</string>
-  <string name="a">0 km</string>
+  <string name="distance_hint">0 km</string>
   <string name="duration">Duration</string>
-  <string name="_0_min">0 min</string>
+  <string name="duration_hint">0 min</string>
   <string name="find_path"> Find Path </string>
   <string name="add_friend">Add friend</string>
   <string name="help">Help</string>
   <string name="location_text">Faculty of Computer Science\nBld. Vasile Parvan\nTimisoara</string>
   <string-array name="test_locations">
     <item>Catedrala Mitropolitana Timisoara</item>
-    <item>auchan Timisoara</item>
-    <item>biblioteca Universitatii Politehnica Timisoara</item>
-    <item>baza 2 Upt</item>
+    <item>Auchan Timisoara</item>
+    <item>Biblioteca Universitatii Politehnica Timisoara</item>
+    <item>Baza 2 Upt</item>
   </string-array>
 </resources>

@@ -5,5 +5,5 @@ package com.example.marius.helpmesee.directions.model;
  */
 public interface DirectionsModelListener {
 
-  void onInstructionFetched(Instruction instruction);
+  void onInstrFetched(Instruction instruction);
 }

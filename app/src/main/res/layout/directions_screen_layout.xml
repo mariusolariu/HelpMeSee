@@ -4,11 +4,13 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:clickable="false"
+  android:focusable="false"
   android:background="@color/common_google_signin_btn_text_light_pressed"
   tools:context=".directions.presenter.DirectionsScreenPresenter"
   android:padding="5dp">
 
-
+  <!-- Talkback reads the hint event if not visible -->
   <LinearLayout
     android:id="@+id/infoLayout"
     android:layout_width="match_parent"
@@ -22,8 +24,8 @@
       android:layout_height="wrap_content"
       android:textColor="@color/white"
       android:paddingBottom="10dp"
-      android:minWidth="48dp"
       android:background="@drawable/tv_shape"
+      android:minWidth="48dp"
       android:minHeight="48dp"
       android:padding="10dp"
       android:hint="@string/hintEnd"
@@ -47,8 +49,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:contentDescription="@string/distance_km"
-        android:src="@drawable/distance_ico"/>
+        android:labelFor="@+id/distanceIV"
+        android:src="@drawable/distance_ico"
+        android:minWidth="48dp"
+        android:minHeight="48dp"/>
 
       <TextView
         android:id="@+id/distanceTV"
@@ -58,9 +62,11 @@
         android:padding="5dp"
         android:textSize="25sp"
         android:textColor="@color/white"
-        android:hint="@string/a"
+        android:hint="@string/distance_hint"
         android:textAlignment="center"
-        android:textColorHint="@color/white"/>
+        android:textColorHint="@color/white"
+        android:minWidth="48dp"
+        android:minHeight="48dp"/>
 
       <ImageView
         android:id="@+id/durationIV"
@@ -69,8 +75,10 @@
         android:layout_weight="1"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:contentDescription="@string/duration"
-        android:src="@drawable/time_ico"/>
+        android:labelFor="@+id/durationTV"
+        android:src="@drawable/time_ico"
+        android:minWidth="48dp"
+        android:minHeight="48dp"/>
 
       <TextView
         android:id="@+id/durationTV"
@@ -80,8 +88,10 @@
         android:textColor="@color/white"
         android:padding="5dp"
         android:textSize="25sp"
+        android:hint="@string/duration_hint"
         android:textAlignment="center"
-        android:hint="@string/_0_min"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:textColorHint="@color/white"/>
     </LinearLayout>
 

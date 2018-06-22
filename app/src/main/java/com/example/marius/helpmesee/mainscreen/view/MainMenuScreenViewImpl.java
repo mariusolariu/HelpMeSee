@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import com.example.marius.helpmesee.R;
 import com.example.marius.helpmesee.app_logic.AppState;
-import com.example.marius.helpmesee.mainscreen.presenter.MainMenuScreenListener;
 import java.util.List;
 
 /**

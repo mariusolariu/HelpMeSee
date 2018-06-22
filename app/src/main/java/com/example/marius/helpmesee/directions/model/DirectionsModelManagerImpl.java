@@ -15,24 +15,21 @@ import java.util.List;
  */
 public class DirectionsModelManagerImpl implements DirectionsModelManager, InstructionConsumer {
 
-  private Float previousSpeed;
-  private Float previousBearing;
-
   private DirectionsModelListener directionsModelListener;
 
-  private List<GCSPoint> coordinatesEV;
+  private List<GCSPoint> pathCoordinates;
   /**
    * If we think of the path as a road, then pathRadius determines the road's width,i.e. 2*pathRadius
    */
   private Float pathRadius;
 
   //used to predict user future location after a certain time given a speed
-  private Float duration;
+  private Float deltaT;
 
 
   public DirectionsModelManagerImpl() {
     //default values
-    duration = 5f; //seconds
+    deltaT = 5f; //seconds
     pathRadius = 3f; //meters
   }
 
@@ -42,34 +39,43 @@ public class DirectionsModelManagerImpl implements DirectionsModelManager, Instr
    */
   @Override
   public void fetchInstruction(Location newLocation) {
-    Float bearing;
-    Float speed = 0f;
+//    Float bearing;
+//    Float speed = 0f;
 
-    if (newLocation.hasSpeed()) {
-      speed = newLocation.getSpeed();
-      previousSpeed = speed;
-    } else {
-      //average walking speed is 1.4 m/s
-      speed = 1.4f;
-    }
+    if (newLocation.hasSpeed() && newLocation.hasBearing()) {
+      LatLng currentLoc = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
 
-    speed = toMph(speed);
-
-    LatLng startPoint = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
-
-    if (newLocation.hasBearing()) {
-      bearing = newLocation.getBearing();
-      /**
-       * Don't provide any instruction if the user is not moving
-       */
+      float speed = newLocation.getSpeed();
+      float bearing = newLocation.getBearing();
       new InstructionProviderTask(this)
-          .execute(startPoint, speed, bearing, pathRadius, coordinatesEV);
-
-      //update
-      previousBearing = bearing;
-    } else {
-//      bearing = previousBearing;
+          .execute(currentLoc, speed, bearing, pathRadius, pathCoordinates, deltaT);
     }
+
+//    if (newLocation.hasSpeed()) {
+//      speed = newLocation.getSpeed();
+//      previousSpeed = speed;
+//    } else {
+//      //average walking speed is 1.4 m/s
+//      speed = 1.4f;
+//    }
+//
+//    speed = toMph(speed);
+//
+//    LatLng startPoint = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
+//
+//    if (newLocation.hasBearing()) {
+//      bearing = newLocation.getBearing();
+//      /**
+//       * Don't provide any instruction if the user is not moving
+//       */
+//      new InstructionProviderTask(this)
+//          .execute(startPoint, speed, bearing, pathRadius, pathCoordinates, deltaT);
+//
+//      //update
+//      previousBearing = bearing;
+//    } else {
+//      bearing = previousBearing;
+//    }
 
   }
 
@@ -81,15 +87,17 @@ public class DirectionsModelManagerImpl implements DirectionsModelManager, Instr
   /**
    * called after the path to a certain destination has been found
    *
-   * @param coordinatesLatLng - LatLng coordintes from current location to destination
+   * @param currentPathCoordinates - LatLng coordintes from current location to destination
    */
-  public void initialize(List<LatLng> coordinatesLatLng, float radius, float duration,
+  @Override
+  public void initialize(List<LatLng> currentPathCoordinates, Float radius, Float deltaT,
       Float currentPhoneBearing) {
-    this.coordinatesEV = toListOfGCSPoints(coordinatesLatLng);
+    this.pathCoordinates = toListOfGCSPoints(currentPathCoordinates);
     this.pathRadius = radius;
-    this.duration = duration;
-    previousBearing = currentPhoneBearing;
+    this.deltaT = deltaT;
+
   }
+
 
   /**
    * We need this conversion since the path following algorithm uses a list of GCSPoint not of LatLng
@@ -112,7 +120,7 @@ public class DirectionsModelManagerImpl implements DirectionsModelManager, Instr
 
   @Override
   public void instructionResult(Instruction instruction) {
-    directionsModelListener.onInstructionFetched(instruction);
+    directionsModelListener.onInstrFetched(instruction);
   }
 
 }

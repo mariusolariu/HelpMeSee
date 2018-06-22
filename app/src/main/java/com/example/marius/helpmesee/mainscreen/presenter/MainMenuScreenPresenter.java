@@ -11,24 +11,24 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Toast;
 import com.example.marius.helpmesee.app_logic.AppFeaturesEnum;
 import com.example.marius.helpmesee.app_logic.AppState;
+import com.example.marius.helpmesee.app_logic.Constants;
 import com.example.marius.helpmesee.directions.presenter.DirectionsScreenPresenter;
 import com.example.marius.helpmesee.location.presenter.LocationScreenPresenter;
 import com.example.marius.helpmesee.mainscreen.util.GpsCheckTask;
 import com.example.marius.helpmesee.mainscreen.util.GpsCheckTask.GpsVisiter;
 import com.example.marius.helpmesee.mainscreen.util.InternetCheckTask;
 import com.example.marius.helpmesee.mainscreen.util.InternetCheckTask.InternetVisiter;
+import com.example.marius.helpmesee.mainscreen.view.MainMenuScreenListener;
 import com.example.marius.helpmesee.mainscreen.view.MainMenuScreenView;
-import com.example.marius.helpmesee.mainscreen.view.MainMenuScreenViewImpl;
-import com.example.marius.helpmesee.scene_description.SceneDescPresenter;
-import com.example.marius.helpmesee.text_recognition.TextRecPresenter;
+import com.example.marius.helpmesee.util.ViewsFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
       setLeftButtonLayoutParams();
     }
 
-    rootView = new MainMenuScreenViewImpl(this, null);
+    rootView = (MainMenuScreenView) ViewsFactory.createView(this, AppFeaturesEnum.MAIN_MENU);
     setContentView(rootView.getAndroidLayoutView());
 
     addAppFeatures();
@@ -113,6 +113,11 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
 
     for (AppFeaturesEnum feature : AppFeaturesEnum.values()
         ) {
+      // we don't want it in this list
+      if (feature == AppFeaturesEnum.MAIN_MENU) {
+        continue;
+      }
+
       appFeaturesList.add(feature.toString());
     }
   }
@@ -138,15 +143,19 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
         break;
 
       case SCENE_DESCRIPTION:
-        Log.i(MAIN_SCREEN_TAG, "Launching SCENE_DESCRIPTION screen");
-
-        startActivity(new Intent(MainMenuScreenPresenter.this, SceneDescPresenter.class));
+        Toast.makeText(this, "Feature not implemented yet!", Toast.LENGTH_SHORT).show();
+        Log.i(Constants.HMS_INFO, "Feature not implemented yet! ");
+//        Log.i(MAIN_SCREEN_TAG, "Launching SCENE_DESCRIPTION screen");
+//
+//        startActivity(new Intent(MainMenuScreenPresenter.this, SceneDescPresenter.class));
         break;
 
       case TEXT_RECOGNITION:
-        Log.i(MAIN_SCREEN_TAG, "Launching TEXT_RECOGNITION screen");
-
-        startActivity(new Intent(MainMenuScreenPresenter.this, TextRecPresenter.class));
+        Toast.makeText(this, "Feature not implemented yet!", Toast.LENGTH_SHORT).show();
+        Log.i(Constants.HMS_INFO, "Feature not implemented yet! ");
+//        Log.i(MAIN_SCREEN_TAG, "Launching TEXT_RECOGNITION screen");
+//
+//        startActivity(new Intent(MainMenuScreenPresenter.this, TextRecPresenter.class));
         break;
 
       default:
@@ -176,7 +185,7 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
   private void setSpeechButtonLayoutParams() {
     int phone_height_dp = AppState.getInstance().getPhone_height_dp();
     int phone_width_dp = AppState.getInstance().getPhone_width_dp();
-    int spButtonWidth = (int) (phone_width_dp );
+    int spButtonWidth = (int) (phone_width_dp);
     int spButtonHeight = phone_height_dp / 3;
 
     //programmaticaly configured the position of button since it will be a children
@@ -208,7 +217,7 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
 
   @Override
   public void gpsResult(Boolean gpsOn) {
-    if (!gpsOn){
+    if (!gpsOn) {
       rootView.askTurnGpsOn();
     }
   }
@@ -217,7 +226,7 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
   public void internetResult(Boolean internetOn) {
     if (!internetOn) {
       rootView.askTurnInternetOn();
-    }else{
+    } else {
       GpsCheckTask gpsCheckTask = new GpsCheckTask(this);
       gpsCheckTask.execute();
     }
@@ -232,6 +241,8 @@ public class MainMenuScreenPresenter extends MainMenuScreenListener implements I
 
   @Override
   public void execute(String detectedText) {
-
+    if (detectedText.toUpperCase().equals("EXIT")) {
+      finishAffinity();
+    }
   }
 }

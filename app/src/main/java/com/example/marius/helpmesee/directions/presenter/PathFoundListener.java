@@ -1,6 +1,7 @@
 package com.example.marius.helpmesee.directions.presenter;
 
 
+import com.example.marius.helpmesee.directions.model.PathDto;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ public interface PathFoundListener {
 
   /**
    * Callback method
-   * @param path - dto object
+   * @param pathDto - dto object
    */
-  void pathFound(List<com.example.marius.helpmesee.directions.model.Path> path);
+  void onPathsFound(List<PathDto> pathDto);
 }
