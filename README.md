@@ -2,6 +2,7 @@
 Mobile app assistant for visually impaired people
 
 Demo video: https://drive.google.com/file/d/1aS2_OGxDwcsUxPdTkoDwG2awWTpTd6n_/view?usp=sharing
+
 Documentation: can be found in my repository "BT_Documentation"
 
 ## Short Description
