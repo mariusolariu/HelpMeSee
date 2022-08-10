@@ -3,7 +3,7 @@ Android mobile app assistant for visually impaired people, developed as part of 
 
 Demo video: https://drive.google.com/file/d/1aS2_OGxDwcsUxPdTkoDwG2awWTpTd6n_/view?usp=sharing
 
-Documentation: can be found in my repository "BT_Documentation"
+Documentation can be found in my repository ["BT_Documentation"](https://github.com/mariusolariu/BT_Documentation/blob/master/Marius_Olariu_Bachelor_Thesis.pdf)
 
 ## Short Description
 
