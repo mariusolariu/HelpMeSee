@@ -1,7 +1,7 @@
 # HelpMeSee
 Android mobile app assistant for visually impaired people, developed as part of my BSc thesis in "Computer and Software Engineering".
 
-Demo video: https://drive.google.com/file/d/1aS2_OGxDwcsUxPdTkoDwG2awWTpTd6n_/view?usp=sharing
+Demo video: https://drive.google.com/file/d/1pr7qrFJ2OrxYpGpSmbBy3GzDOj5ZUCOP/view?usp=sharing
 
 Documentation can be found in my repository ["BT_Documentation"](https://github.com/mariusolariu/BT_Documentation/blob/master/Marius_Olariu_Bachelor_Thesis.pdf)
 
