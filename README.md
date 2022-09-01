@@ -1,5 +1,5 @@
 # HelpMeSee
-Android mobile app assistant for visually impaired people, developed as part of my BSc thesis in "Computer and Software Engineering".
+Android mobile app assistant for visually impaired people, developed as part of my BSc thesis in "Computer and Software Engineering" at Polytechnic University Timisoara (Romania).
 
 Demo video: https://drive.google.com/file/d/1pr7qrFJ2OrxYpGpSmbBy3GzDOj5ZUCOP/view?usp=sharing
 
